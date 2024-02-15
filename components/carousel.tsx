@@ -8,21 +8,28 @@ import 'swiper/css/navigation';
 import { Pagination, Navigation } from 'swiper/modules';
 import Image from 'next/image';
 
+//https://swiperjs.com/swiper-api#css-styles
+
 const Carousel = () => {
     return (
-        <div>
+        <div className=' w-full px-5'>
             <Swiper
-                className=' w-screen h-[400px] bg-slate-400'
+                centeredSlides={true}
+                slidesPerView={1}
                 pagination={{
                     type: 'fraction',
                 }}
                 navigation={true}
                 modules={[Pagination, Navigation]}
             >
-                <SwiperSlide className=' ml-9 mt-9'>
-                    <Image alt="" width={200} height={300} src={"https://python.langchain.com/assets/images/langchain_stack-f21828069f74484521f38199910007c1.svg"}></Image>
+                <SwiperSlide >
+                    <div className='w-full flex justify-center'>
+                        <Image src={`/image/banner_1.png`} alt="" width="963" height="406" />
+                    </div>
                 </SwiperSlide>
-                <SwiperSlide>Slide 2</SwiperSlide>
+                <SwiperSlide>
+                    <Image src={`/image/banner_1.png`} alt="" width="963" height="406" />
+                </SwiperSlide>
                 <SwiperSlide>Slide 3</SwiperSlide>
                 <SwiperSlide>Slide 4</SwiperSlide>
                 <SwiperSlide>Slide 5</SwiperSlide>
@@ -39,6 +46,7 @@ const Carousel = () => {
            .swiper-pagination-bullet {
              border-radius: 0;
            }
+         
          `}
             </style>
         </div>
