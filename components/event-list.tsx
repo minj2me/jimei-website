@@ -10,14 +10,14 @@ const EventList: React.FC<EventListProps> = ({
 }) => {
     if (events === undefined) {
         events = new Array<Event>();
-        events.push({ type: EventType.Event, title: "Event", imageUrl: "" });
-        events.push({ type: EventType.News, title: "News1", imageUrl: "" });
-        events.push({ type: EventType.News, title: "News2", imageUrl: "" });
-        events.push({ type: EventType.News, title: "News3", imageUrl: "" });
-        events.push({ type: EventType.News, title: "News4", imageUrl: "" });
+        events.push({ type: EventType.Event, title: "Event", images: [] });
+        events.push({ type: EventType.News, title: "News1", images: [] });
+        events.push({ type: EventType.News, title: "News2", images: [] });
+        events.push({ type: EventType.News, title: "News3", images: [] });
+        events.push({ type: EventType.News, title: "News4", images: [] });
     }
     return (
-        <div className='grid grid-cols-4 gap-6'>
+        <div className='grid grid-cols-5 gap-6 w-[70%]'>
             {
                 events.map((item) => (
                     <EventItem event={item} />

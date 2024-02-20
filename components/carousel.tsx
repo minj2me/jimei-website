@@ -6,7 +6,6 @@ import 'swiper/css/navigation';
 
 // import required modules
 import { Pagination, Navigation } from 'swiper/modules';
-import Image from 'next/image';
 import { Banner } from '@/types';
 
 //https://swiperjs.com/swiper-api#css-styles

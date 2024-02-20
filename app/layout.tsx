@@ -24,6 +24,7 @@ export default function RootLayout({
         <ToastProvider />
         <Header />
         {children}
+        <div className="h-[200px]" />
         <Footer/>
       </body>
     </html>

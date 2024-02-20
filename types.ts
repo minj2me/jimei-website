@@ -28,8 +28,27 @@ export enum EventType {
   Event = 1,
 }
 
+export interface EventSub {
+  title: string,
+  image: EventImage,
+  timeString?: string,
+  desc?: string,
+}
+
 export interface Event {
   type: EventType,
   title: string,
-  imageUrl: string,
+  images: EventImage[],
+  timeString?: string,
+  descUnderImage?: string,
+  desc?: string,
+  desc2?: string,
+  desc3?: string,
+}
+
+export interface EventImage {
+  url: string,
+  alt?: string,
+  width: number,
+  height: number,
 }
