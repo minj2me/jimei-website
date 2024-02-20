@@ -13,3 +13,8 @@ body,
   --swiper-navigation-color: #000000;/* 单独设置按钮颜色 */
   --swiper-navigation-size: 20px;/* 设置按钮大小 */
 }
+
+/*参考 https://juejin.cn/post/7260772691500826681*/
+.text-with-line-breaks {
+  white-space: pre-line;
+}

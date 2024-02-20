@@ -1,13 +1,16 @@
+import Image from 'next/image'
+
 const Footer = () => {
-    return(
-        <footer className="bg-white border-t">
-        <div className="mx-auto py-10">
-          <p className="text-center text-xs text-black">
-            &copy; 2024 Jimi, Inc. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    );
+  return (
+    <footer className="bg-white ml-[119px] mr-[116px]">
+      <Image src={`/image/jm_logo.png`} alt="" width="38" height="35" />
+      <div className="mx-auto py-10">
+        <p className="text-xs text-[#8D8D8D]">
+          &copy; 2021 Jimi
+        </p>
+      </div>
+    </footer>
+  );
 }
 
 export default Footer;
