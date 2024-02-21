@@ -1,4 +1,3 @@
-// import ModalProvider from '@/providers/modal-provider'
 import ToastProvider from '@/providers/toast-provider'
 
 import { Urbanist } from 'next/font/google'
@@ -25,7 +24,7 @@ export default function RootLayout({
         <Header />
         {children}
         <div className="h-[200px]" />
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

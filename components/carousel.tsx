@@ -5,7 +5,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 // import required modules
-import { Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { Banner } from '@/types';
 
 //https://swiperjs.com/swiper-api#css-styles
@@ -31,7 +31,12 @@ const Carousel: React.FC<CarouselProps> = ({
                     type: 'fraction',
                 }}
                 navigation={true}
-                modules={[Pagination, Navigation]}
+                autoplay={{
+                    delay: 3000,
+                    stopOnLastSlide: true,
+                    disableOnInteraction: false,
+                }}
+                modules={[Autoplay, Pagination, Navigation]}
             >
                 {
                     banners.map((item) => (
@@ -63,7 +68,7 @@ const Carousel: React.FC<CarouselProps> = ({
          
          `}
             </style>
-        </div>
+        </div >
     );
 }
 

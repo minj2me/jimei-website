@@ -9,7 +9,7 @@ import EventSubList from "@/components/event-sub-list";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between">
+    <div className="flex flex-col items-center justify-between">
       <Carousel banners={undefined} />
       <div className="h-[80px]" />
       <EventList events={undefined} />

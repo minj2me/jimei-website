@@ -1,15 +1,7 @@
-//import getCase from '@/actions/get-case';
 import Container from '@/components/ui/container';
 
-interface CasePageProps {
-    params: {
-        caseId: string;
-    }
-}
 
-const CasePage: React.FC<CasePageProps> = async ({
-    params
-}) => {
+const CaseIndexPage = () => {
     /*const companyCase = await getCase(params.caseId);
 
     if (!companyCase) {
@@ -19,10 +11,10 @@ const CasePage: React.FC<CasePageProps> = async ({
     return (
         <div className=' bg-white'>
             <Container>
-            CasePage
+                CaseIndexPage
             </Container>
         </div>
     );
 }
 
-export default CasePage;
+export default CaseIndexPage;
