@@ -8,10 +8,41 @@ export interface MainTab {
   name: string;
 };
 
+export interface CaseTab {
+  title: string,
+  type: CaseTab,
+}
+
+export interface CaseTypeData {
+  type: CaseType,
+  name: string,
+}
+
+export enum CaseType {
+  BrandDesign = 0,
+  AlbumDesign = 1,//画册设计
+  PackagingDesign = 2,
+  IndustrialDesign = 3,
+  PPTDesign = 4,
+  WebDesign = 5,
+}
+
+export enum CaseTypeName {
+  BrandDesign = "品牌设计",
+  AlbumDesign = "画册设计",
+  PackagingDesign = "包装设计",
+  IndustrialDesign = "工业设计",
+  PPTDesign = "PPT设计",
+  WebDesign = "网页设计",
+}
+
 export interface Case {
-  type: number,
+  type: CaseTypeData,
   id: string,
-  titie: string,
+  title: string,
+  desc: string,
+  mainImage: ImageData,
+  images?: ImageData[],
 }
 
 export interface Banner {
@@ -30,7 +61,7 @@ export enum EventType {
 
 export interface EventSub {
   title: string,
-  image: EventImage,
+  image: ImageData,
   timeString?: string,
   desc?: string,
 }
@@ -38,7 +69,7 @@ export interface EventSub {
 export interface Event {
   type: EventType,
   title: string,
-  images: EventImage[],
+  images: ImageData[],
   timeString?: string,
   descUnderImage?: string,
   desc?: string,
@@ -46,7 +77,7 @@ export interface Event {
   desc3?: string,
 }
 
-export interface EventImage {
+export interface ImageData {
   url: string,
   alt?: string,
   width: number,

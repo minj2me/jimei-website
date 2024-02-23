@@ -1,4 +1,4 @@
-import Modal from "./modal";
+import ModalComponent from "./modal";
 import { useState, useEffect } from "react";
 
 interface MenuModalProps {
@@ -20,20 +20,20 @@ const MenuModal: React.FC<MenuModalProps> = ({
     }
 
     return (
-        <Modal
+        <ModalComponent
             title={""}
             description={""}
             isOpen={isOpen}
             onClose={onClose}
         >
-            <div className="space-x-2 flex flex-row items-center justify-center bg-neutral-600/50">
+            <div className="space-x-2 flex flex-row items-center justify-center bg-red-500">
                 <p className=" text-white text-[20px]">案例</p>
                 <p className=" text-white text-[20px] m-10">.</p>
                 <p className=" text-white text-[20px]">关于</p>
                 <p className=" text-white text-[20px] m-10">.</p>
                 <p className=" text-white text-[20px]">联系</p>
             </div>
-        </Modal>
+        </ModalComponent>
     );
 }
 export default MenuModal;

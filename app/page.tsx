@@ -4,6 +4,8 @@ import Carousel from "@/components/carousel";
 import EventList from "@/components/event-list";
 import EventSubList from "@/components/event-sub-list";
 
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+
 //https://chakra-ui.com/docs/components
 //https://blog.csdn.net/Erin_jwx/article/details/125351491
 
