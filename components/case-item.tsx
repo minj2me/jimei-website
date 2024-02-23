@@ -10,8 +10,8 @@ const CaseItem: React.FC<CaseItemProps> = ({
     return (
         <div className=" flex flex-col">
             <img src={caseData.mainImage.url} />
-            <p>{caseData.title}</p>
-            <p>{caseData.desc}</p>
+            <p className=" mt-[15px] text-[16px]">{caseData.title}</p>
+            <p className=" text-[#999999] mt-[10px] text-[16px]">{caseData.desc}</p>
         </div>
     );
 }

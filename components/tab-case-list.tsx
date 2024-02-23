@@ -44,9 +44,9 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                     borderRadius="1px"
                 />
                 <p className=' mt-[1.5px] w-full border-b border-dashed bg-[#999999]' />
-                <div className=" h-[80px]"/>
+                <div className=" h-[80px]" />
                 <TabPanels>
-                    <CaseList cases={currentCases} />
+                    <CaseList cases={currentCases} itemsPerPage={1} />
                 </TabPanels>
             </Tabs>
         </div>
