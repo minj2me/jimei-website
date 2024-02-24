@@ -6,6 +6,9 @@ interface EventDetailPageProps {
     }
 }
 
+/**
+ * 推文详情页
+ */
 const EventDetailPage: React.FC<EventDetailPageProps> = async ({
     params
 }) => {

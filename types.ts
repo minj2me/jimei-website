@@ -36,6 +36,13 @@ export enum CaseTypeName {
   WebDesign = "网页设计",
 }
 
+export interface Worker {
+  id: number,
+  name: string,
+  desc: string,
+  mainImage: ImageData,
+}
+
 export interface Case {
   type: CaseTypeData,
   id: string,

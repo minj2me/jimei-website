@@ -14,28 +14,21 @@ const CaseList: React.FC<CaseListProps> = ({
     cases, itemsPerPage, tabChanged
 }) => {
     //const [currentItems, setCurrentItems] = useState<Case[]>(cases);
-    console.log("cases length:" + cases.length);
     //console.log("dataType:" + dataType);
     const [itemOffset, setItemOffset] = useState(0);
     //const [needReload_, setNeedReload_] = useState(needReload);
-    //const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
     //const [initialPageIndex, setInitialPageIndex] = useState(0);
     const endOffset = itemOffset + itemsPerPage;
-    console.log("itemOffset:" + itemOffset);
+    /*console.log("itemOffset:" + itemOffset);
     console.log("endOffset:" + endOffset);
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+    console.log(`Loading items from ${itemOffset} to ${endOffset}`);*/
     let currentItems = cases.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(cases.length / itemsPerPage);
-    //console.log("needReload_:" + needReload_);
-    /*if (currentItems === undefined || currentItems.length <= 0) {
-        currentItems = cases.slice(0, itemsPerPage);
-        needReload = true;
-        console.log("needReload:" + needReload);
-    }*/
-    console.log("tabChanged:" + tabChanged);
     useEffect(() => {
         //console.log("tabChanged:"+tabChanged);
         setItemOffset(0);
+        setCurrentPage(0);
     }, [tabChanged]);// when the categoryInput changes, the pagination will be reset back to 0*/
     return (
         <div>
@@ -52,17 +45,14 @@ const CaseList: React.FC<CaseListProps> = ({
             }} /> */}
             <ReactPaginate
                 onPageChange={(event) => {
-                    console.log("onPageChange, event.selected:" + event.selected);
                     const newOffset = (event.selected * itemsPerPage) % cases.length;
-                    console.log(
-                        `User requested page number ${event.selected}, which is offset ${newOffset}`
-                    );
+                    //console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`);
                     setItemOffset(newOffset);
                 }}
                 className="flex items-center justify-center"
                 pageCount={pageCount}
-                //forcePage={currentPage}
-                //initialPage={currentPage}
+                forcePage={currentPage}
+                initialPage={currentPage}
                 pageRangeDisplayed={1}
                 marginPagesDisplayed={1}
                 breakLabel="..."

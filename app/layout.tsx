@@ -23,10 +23,10 @@ export default function RootLayout({
       <body className={font.className}>
         <ToastProvider />
         <ChakraProvider>
-        <Header />
-        {children}
-        <div className="h-[200px]" />
-        <Footer />
+          <Header />
+          {children}
+          <div className="h-[200px]" />
+          <Footer />
         </ChakraProvider>
       </body>
     </html>

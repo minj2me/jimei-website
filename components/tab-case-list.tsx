@@ -8,16 +8,15 @@ import CaseList from "./case-list";
 interface TabCaseListComponentProps {
     tabs: CaseTypeData[],
     caseMap: Map<CaseType, Case[]>,
-    onTabChange(index: number): void;
+    //onTabChange(index: number): void;
 }
 
 const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
-    tabs, caseMap, onTabChange
+    tabs, caseMap
 }) => {
-    const isInitialRender = useRef(true); // 用于标记是否是首次渲染
+    //const isInitialRender = useRef(true); // 用于标记是否是首次渲染
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [needReload, setNeedReload] = useState<boolean>(false);
-    //const router = useRouter();
     if (caseMap === undefined || caseMap === null) {
         return;
     }
@@ -32,21 +31,22 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     if (!currentCases) {
         return;
     }
-    console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
+    //console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
     return (
         <div className=" w-[95%]">
             <Tabs size='md' align="center" variant="unstyled" onChange={
                 (index) => {
                     setDataOffset(0),
-                        console.log("index:" + index + ", data count:" + caseMap.get(tabs[index].type)?.length + ", name:" + tabs[index].name),
+                        //console.log("index:" + index + ", data count:" + caseMap.get(tabs[index].type)?.length + ", name:" + tabs[index].name),
                         setCurrentCases(caseMap.get(tabs[index].type) ?? []),
                         setCurrentIndex(index),
-                        onTabChange(index)
+                        //onTabChange(index)
                     setNeedReload(true);
+                    //reset value
                     setTimeout(() => {
-                        console.log("TabCaseListComponent, setNeedReload to false")
+                        //console.log("TabCaseListComponent, setNeedReload to false")
                         setNeedReload(false)
-                    }, 1000);
+                    }, 500);
                     // Force refresh the page
                 }
             }>
@@ -65,7 +65,7 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                 <p className=' mt-[1.5px] w-full border-b border-dashed bg-[#999999]' />
                 <div className=" h-[80px]" />
                 <TabPanels>
-                    <CaseList cases={currentCases} itemsPerPage={1} tabChanged={needReload} />
+                    <CaseList cases={currentCases} itemsPerPage={9} tabChanged={needReload} />
                 </TabPanels>
             </Tabs>
         </div>

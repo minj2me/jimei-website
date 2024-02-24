@@ -7,6 +7,9 @@ interface CasePageProps {
     }
 }
 
+/**
+ * 案例详情页
+ */
 const CasePage: React.FC<CasePageProps> = async ({
     params
 }) => {

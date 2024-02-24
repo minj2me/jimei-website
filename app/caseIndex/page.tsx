@@ -1,16 +1,16 @@
-"use client";
 import Container from '@/components/ui/container';
-import { useRouter } from 'next/navigation';
 import TabListComponent from "@/components/tab-case-list";
 import { CaseTypeData, CaseType, CaseTypeName, Case } from '@/types';
 //import CaseList from '@/components/case-list';
 
+/**
+ * 案例主页
+ */
 const CaseIndexPage = () => {
     /*const companyCase = await getCase(params.caseId);
     if (!companyCase) {
         return null;
     }*/
-    const router = useRouter();
 
     const caseTypes = new Array<CaseTypeData>();
     caseTypes.push({ type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign });
@@ -19,14 +19,6 @@ const CaseIndexPage = () => {
     caseTypes.push({ type: CaseType.PPTDesign, name: CaseTypeName.PPTDesign });
     caseTypes.push({ type: CaseType.WebDesign, name: CaseTypeName.WebDesign });
 
-    /**
-     *   type: CaseTypeData,
-  id: string,
-  title: string,
-  desc: string,
-  mainImage: ImageData,
-  images?: ImageData[],
-     */
     const map = new Map<CaseType, Case[]>();
     const mainImage_ = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
     const cases = new Array<Case>();
@@ -91,10 +83,7 @@ const CaseIndexPage = () => {
                 <div>
                     <p className='absolute text-[40px]'>Work</p>
                     <div className=' h-[20px]' />
-                    <TabListComponent tabs={caseTypes} caseMap={map} onTabChange={(index) => {
-                        console.log("onTabChange:" + index);
-                        //router.refresh();
-                    }} />
+                    <TabListComponent tabs={caseTypes} caseMap={map}/>
                 </div>
             </Container>
         </div>

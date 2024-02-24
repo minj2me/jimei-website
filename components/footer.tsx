@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 const Footer = () => {
   return (
-    <footer className="w-[100%] flex justify-center items-center">
+    <footer className="w-[100%] flex justify-center items-center bg-[#f2f2f2]">
       <div className=" w-[70%]">
         <Image src={`/image/jm_logo.png`} alt="" width="38" height="35" />
         <div className='flex flex-row justify-between '>

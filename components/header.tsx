@@ -18,11 +18,7 @@ const Header = () => {
     const [open, setOpen] = useState(false);
     return (
         <>
-            {/* <MenuModal
-                isOpen={open}
-                onClose={() => { setOpen(false) }}
-            /> */}
-            <div className="flex items-center">
+            <div className="flex items-center bg-[#f2f2f2]">
                 <div
                     className=" flex justify-center items-center h-[80px] w-full "
                 >
