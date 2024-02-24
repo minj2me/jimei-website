@@ -1,68 +1,60 @@
-import { Case, CaseType } from "@/types";
-import CaseItem from "@/components/case-item";
-//import Paginate from "@/components/ui/paginate";
 import ReactPaginate from 'react-paginate';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-interface CaseListProps {
-    cases: Case[],
+//https://github.com/AdeleD/react-paginate/issues/501
+
+interface PaginateProps<T> {
+    //datas: [],
+    datas: Array<T>,
     itemsPerPage: number,
-    tabChanged?: boolean,
+    //onDataChange?(currentDatas: any[]): void;
+    onDataChange?(currentDatas: Array<T>): void;
 }
 
-const CaseList: React.FC<CaseListProps> = ({
-    cases, itemsPerPage, tabChanged
+const Paginate: React.FC<PaginateProps<any>> = ({
+    datas, itemsPerPage, onDataChange
 }) => {
-    //const [currentItems, setCurrentItems] = useState<Case[]>(cases);
-    console.log("cases length:" + cases.length);
-    //console.log("dataType:" + dataType);
-    const [itemOffset, setItemOffset] = useState(0);
-    //const [needReload_, setNeedReload_] = useState(needReload);
-    //const [currentPage, setCurrentPage] = useState(0);
-    //const [initialPageIndex, setInitialPageIndex] = useState(0);
-    const endOffset = itemOffset + itemsPerPage;
-    console.log("itemOffset:" + itemOffset);
-    console.log("endOffset:" + endOffset);
-    console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-    let currentItems = cases.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(cases.length / itemsPerPage);
-    //console.log("needReload_:" + needReload_);
-    /*if (currentItems === undefined || currentItems.length <= 0) {
-        currentItems = cases.slice(0, itemsPerPage);
-        needReload = true;
-        console.log("needReload:" + needReload);
-    }*/
-    console.log("tabChanged:" + tabChanged);
+    const isInitialRender = useRef(true); // 用于标记是否是首次渲染
+    //const [itemOffset, setItemOffset] = useState(0);
+    const [pageCount, setPageCount] = useState(Math.ceil(datas.length / itemsPerPage));
+    // Simulate fetching items from another resources.
+    // (This could be items from props; or items loaded in a local state
+    // from an API endpoint with useEffect and useState)
     useEffect(() => {
-        //console.log("tabChanged:"+tabChanged);
-        setItemOffset(0);
-    }, [tabChanged]);// when the categoryInput changes, the pagination will be reset back to 0*/
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+            return;
+        }
+        const itemOffset = 0;
+        const endOffset = itemOffset + itemsPerPage;
+        console.log(`Loading items from ${itemOffset} to ${endOffset}`);
+        const currentItems = datas.slice(itemOffset, endOffset);
+        if (onDataChange) {
+            onDataChange(currentItems);
+            console.log("currentItems length:" + currentItems.length);
+        }
+    }, [])
     return (
         <div>
-            <div className=" grid grid-cols-3 gap-[40px]">
-                {
-                    currentItems.map((item) => (
-                        <CaseItem caseData={item} />
-                    ))
-                }
-            </div>
-            <div className=" h-[100px]" />
-            {/* <Paginate datas={cases} itemsPerPage={itemsPerPage} onDataChange={(currentDatas) => {
-                setCurrentItems(currentDatas);
-            }} /> */}
             <ReactPaginate
                 onPageChange={(event) => {
-                    console.log("onPageChange, event.selected:" + event.selected);
-                    const newOffset = (event.selected * itemsPerPage) % cases.length;
+                    //console.log("datas.length:" + datas.length);
+                    const newOffset = (event.selected * itemsPerPage) % datas.length;
                     console.log(
                         `User requested page number ${event.selected}, which is offset ${newOffset}`
                     );
-                    setItemOffset(newOffset);
+                    const endOffset = newOffset + itemsPerPage;
+                    //console.log("onDataChange newOffset:" + newOffset);
+                    //console.log("onDataChange endOffset:" + endOffset);
+                    const currentItems = datas.slice(newOffset, endOffset);
+                    if (onDataChange) {
+                        onDataChange(currentItems);
+                        //console.log("onDataChange currentItems length:" + currentItems.length);
+                    }
                 }}
                 className="flex items-center justify-center"
                 pageCount={pageCount}
-                //forcePage={currentPage}
-                //initialPage={currentPage}
+                forcePage={pageCount - 1}
                 pageRangeDisplayed={1}
                 marginPagesDisplayed={1}
                 breakLabel="..."
@@ -71,7 +63,9 @@ const CaseList: React.FC<CaseListProps> = ({
                 pageClassName="m-4 h-7 w-7 flex justify-center items-center ring-0 ring-inset ring-gray-300 -ml-[1px]"
                 pageLinkClassName="leading-1"
                 activeClassName="bg-wif-orange-2 text-white ring-0 bg-black"
+                //previousClassName="relative inline-flex items-center rounded-l-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 previousClassName="m-4 relative inline-flex items-center rounded-l-md p-2 text-gray-400 ring-0 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+                //nextClassName="relative inline-flex items-center rounded-r-md p-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 nextClassName="m-4 relative inline-flex items-center rounded-r-md p-2 text-gray-400 ring-0 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                 previousLabel={
                     <>
@@ -111,4 +105,4 @@ const CaseList: React.FC<CaseListProps> = ({
         </div>
     );
 }
-export default CaseList;
+export default Paginate;
