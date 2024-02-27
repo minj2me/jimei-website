@@ -10,7 +10,7 @@ const WorkerList: React.FC<WorkListProps> = ({
 }) => {
     return (
         <div>
-            <div className=" grid grid-cols-4 gap-[30px]">
+            <div className=" grid grid-cols-4 gap-y-10">
                 {
                     workers.map((item) => (
                         <WorkerItem worker={item} />

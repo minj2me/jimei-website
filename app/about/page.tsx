@@ -26,12 +26,12 @@ const AboutPage = () => {
   height: number,
      */
     const workerList = [
-        { id: 0, name: "johnny", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
-        { id: 1, name: "Eric", desc: "nvcmxnvcx", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
-        { id: 0, name: "aaa", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
-        { id: 1, name: "bbb", desc: "nvcmxnvcx", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
-        { id: 0, name: "cccc", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
-        { id: 1, name: "dddd", desc: "nvcmxnvcx", mainImage: { url: "/image/event2.png", alt: "", width: 250, height: 200 } },
+        { id: 0, name: "johnny", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/worker.png", alt: "", width: 200, height:0 } },
+        { id: 1, name: "Eric", desc: "nvcmxnvcx", mainImage: { url: "/image/worker.png", alt: "", width: 200, height: 0 } },
+        { id: 0, name: "卢宁", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/worker.png", alt: "", width: 200, height: 0 } },
+        { id: 1, name: "卢总", desc: "nvcmxnvcx", mainImage: { url: "/image/worker.png", alt: "", width: 200, height: 0 } },
+        { id: 0, name: "cccc", desc: "fsfdsfds fdsfdsfds", mainImage: { url: "/image/worker.png", alt: "", width: 200, height: 0 } },
+        { id: 1, name: "dddd", desc: "nvcmxnvcx", mainImage: { url: "/image/worker.png", alt: "", width: 200, height: 0 } },
     ];
     return (
         <div className=' bg-[#F2F2F2]'>

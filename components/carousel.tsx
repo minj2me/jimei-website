@@ -40,21 +40,16 @@ const Carousel: React.FC<CarouselProps> = ({
             >
                 {
                     banners.map((item) => (
-                        <SwiperSlide >
-                            <article className='w-full flex'>
+                        <SwiperSlide>
+                            <div className='w-full flex'>
                                 <p className=' fixed text-justify text-[48px]  text-black mt-[117px] ml-[185px] text-with-line-breaks '>{item.englishTitle}</p>
                                 <p className=' fixed text-justify text-[32px]  text-black mt-[263px] ml-[185px]'>{item.title2}</p>
                                 <p className=' fixed bottom-[40px] text-justify text-[32px]  text-black ml-[185px]'>{item.title}</p>
                                 <img src={item.imageUrl} className=' float-left' alt="" width={item.imageWidth} height={item.imageHeight} />
-                            </article>
+                            </div>
                         </SwiperSlide>
                     ))
                 }
-                {/* <SwiperSlide >
-                    <div className='w-full flex justify-center'>
-                        <Image src='/image/banner_1.png' alt="" width="3400" height="1500" />
-                    </div>
-                </SwiperSlide> */}
             </Swiper>
             <style jsx global>
                 {`

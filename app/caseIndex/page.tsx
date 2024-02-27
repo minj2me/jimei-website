@@ -77,7 +77,7 @@ const CaseIndexPage = () => {
     map.set(CaseType.AlbumDesign, cases2);
 
     return (
-        <div className=' bg-white'>
+        <div>
             <div className=' h-[10px]' />
             <Container>
                 <div>

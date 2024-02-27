@@ -74,6 +74,7 @@ export interface EventSub {
 }
 
 export interface Event {
+  id: number,
   type: EventType,
   title: string,
   images: ImageData[],

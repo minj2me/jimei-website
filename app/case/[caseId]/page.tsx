@@ -20,7 +20,7 @@ const CasePage: React.FC<CasePageProps> = async ({
     }*/
 
     return (
-        <div className=' bg-white'>
+        <div>
             <Container>
             CasePage
             </Container>
