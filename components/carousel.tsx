@@ -19,8 +19,8 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
     if (banners === undefined) {
         banners = new Array<Banner>();
-        banners.push({ imageUrl: "/image/banner_1.png", imageWidth: 3400, imageHeight: 1500, title: "test", title2: "test2", englishTitle: "Agarwookd \n Package Vision" })
-        banners.push({ imageUrl: "/image/banner_1.png", imageWidth: 3400, imageHeight: 1500, title: "test2", title2: "test2_2", englishTitle: "english title 2" })
+        banners.push({ imageUrl: "/image/banner_1.png", imageWidth: 3400, imageHeight: 1500, title: "test git ", title2: "test2", englishTitle: "Agarwookd \n Package Vision" })
+        banners.push({ imageUrl: "/image/banner_1.png", imageWidth: 3400, imageHeight: 1500, title: "test2 git ", title2: "test2_2", englishTitle: "english title 2" })
     }
     return (
         <div className=' w-full px-5 bg-[#A9A9A7]'>
