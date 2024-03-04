@@ -1,6 +1,6 @@
 import Container from '@/components/ui/container';
 import TabListComponent from "@/components/tab-case-list";
-import { CaseTypeData, CaseType, CaseTypeName, Case } from '@/types';
+import { CaseTypeData, IndustryTypeName, CaseType, CaseTypeName, Case, CaseTab, CaseHeaderTypeName, CaseHeaderType, CaseTabSub, IndustryType, Client, Industry } from '@/types';
 //import CaseList from '@/components/case-list';
 
 /**
@@ -12,69 +12,112 @@ const CaseIndexPage = () => {
         return null;
     }*/
 
-    const caseTypes = new Array<CaseTypeData>();
-    caseTypes.push({ type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign });
-    caseTypes.push({ type: CaseType.AlbumDesign, name: CaseTypeName.AlbumDesign });
-    caseTypes.push({ type: CaseType.IndustrialDesign, name: CaseTypeName.IndustrialDesign });
-    caseTypes.push({ type: CaseType.PPTDesign, name: CaseTypeName.PPTDesign });
-    caseTypes.push({ type: CaseType.WebDesign, name: CaseTypeName.WebDesign });
+    const caseTabs = new Array<CaseTab>();
+    const caseTabSubFlat = new Array<CaseTabSub>();
+    const clientIndustryTypeFoods = new Array<Client>();
+    const clientIndustryTypeBrand = new Array<Client>();
+    //首席乐厨
+    const client1 = { id: 0, name: "首席乐厨" };
+    const client2 = { id: 1, name: "喜心点心" };
+    clientIndustryTypeFoods.push(client1);
+    clientIndustryTypeBrand.push(client2);
+    //const mainImage_ = { url: "image/cases/case15/main.png", alt: "", width: 3400, height: 1500 };
+    const casesForClient1 = new Array<Case>();
+    const case15 = {
+        clientId: client1.id,
+        type: { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
+        id: "0", title: "（首席乐厨五谷杂粮包装设计）", title2: "Love Kitchen",
+        title3: "首席乐厨食品有限公司\nLove Kitchen Food Co., Ltd\n首席乐厨Love Kitchen\nExecutive Project Director\nBravo\nExecutive Designer\nBai\nExecutive illustrator\nLi\n\nPublished on 08. 20. 2023",
+        desc: "我们在五谷杂粮包装主视觉上使用了手作感的插画，搭配上中式毛笔字，让产品整体感觉充满了中国风，跟农产品搭配起来相得益彰。包装材质上采用牛皮纸，以传递自然农植的品牌理念。",
+        projectBg: "首席乐厨食品有限公司在2015-12-14创建 。法定注册地址为中山市火炬开发区松柏路1号A幢一楼 主要经营食品生产；食品经营；生产、销售：农副产品；销售：干货；国内贸易等，公司现有优秀的员工1-20人，是一家在中山市不断发展进步的批发/零售公司。2023年委托我们为旗下一系列产品包装进行设计。",
+        mainImage: { url: "image/cases/case15/main.png", alt: "", width: 3400, height: 1500 },
+        images: [{ url: "cases/image/case15/1.png", alt: "", width: 1500, height: 0 }, { url: "cases/image/case15/2.png", alt: "", width: 1500, height: 0 }]
+    };
+    const case16 = {
+        clientId: client1.id,
+        type: { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
+        id: "1", title: "（首席乐厨龙虾面包装设计）", title2: "Love Kitchen",
+        title3: "首席乐厨食品有限公司\nLove Kitchen Food Co., Ltd\n首席乐厨Love Kitchen\nExecutive Project Director\nBravo\nExecutive Designer\nBai\nExecutive illustrator\nLi\n\nPublished on 08. 20. 2023",
+        desc: "整体包装以青花瓷风格进行设计，产品名用中华传统牌匾的方式设计，对称式构图，展现中华传统文化的文化底蕴和审美，提取汤字进行印章式设计，传递产品卖点’鲜甜浓汤‘。",
+        projectBg: "首席乐厨食品有限公司在2015-12-14创建 。法定注册地址为中山市火炬开发区松柏路1号A幢一楼 主要经营食品生产；食品经营；生产、销售：农副产品；销售：干货；国内贸易等，公司现有优秀的员工1-20人，是一家在中山市不断发展进步的批发/零售公司。2023年委托我们为旗下一系列产品包装进行设计。",
+        mainImage: { url: "image/cases/case16/main.png", alt: "", width: 3400, height: 1500 },
+        images: [{ url: "cases/image/case16/1.png", alt: "", width: 1500, height: 0 }]
+    };
+    const case17 = {
+        clientId: client1.id,
+        type: { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
+        id: "2", title: "（首席乐厨丝苗米包装设计）", title2: "Love Kitchen",
+        title3: "首席乐厨食品有限公司\nLove Kitchen Food Co., Ltd\n首席乐厨Love Kitchen\nExecutive Project Director\nBravo\nExecutive Designer\nBai\nExecutive illustrator\nLi\n\nPublished on 08. 20. 2023",
+        desc: "我们在丝苗米包装主视觉上使用了手作感的插画，搭配上中式毛笔字，让产品整体感觉充满了中国风，跟农产品搭配起来相得益彰。插图描绘了岭南稻田的景象，强调丝苗米的产地。",
+        projectBg: "以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
+        mainImage: { url: "image/cases/case17/main.png", alt: "", width: 3400, height: 1500 },
+        images: [{ url: "cases/image/case17/1.png", alt: "", width: 1500, height: 0 }]
+    };
+    casesForClient1.push(case15);
+    casesForClient1.push(case16);
+    casesForClient1.push(case17);
 
-    const map = new Map<CaseType, Case[]>();
-    const mainImage_ = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const cases = new Array<Case>();
-    const case1 = {
-        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign }, id: "0", title: "1沉香系列包装视觉方案",
-        desc: "以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_, images: []
+    const casesForClient2 = new Array<Case>();
+    const case18 = {
+        clientId: client2.id,
+        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign },
+        id: "2", title: "喜心点心品牌形象设计", title2: "HEASUM DIMSUM",
+        title3: "Client\n喜心点心(广州)科技股份有限公司\nHeasum Dim sum (Guangzhou) Technology Co., Ltd\nBrand\n 喜心点心 Heasum Dim sum\nExecutive Project Director\nBravo\nExecutive Designer\nBai\nExecutive illustrator\nLi\n\nPublished on 08. 20. 2023",
+        desc: "品牌标志用创始人书法题字为原型进行优化处理，选取黄色搭配棕色为品牌色，高贵端庄。用广州城市建筑以及广州市市花木棉花的插图作为物料设计的延展，传递岭南文化。品牌插图海报描绘了早茶文化中其乐融融、四代同堂、人文温暖的一幕。",
+        projectBg: "喜心(广东)生态食品有限公司是一家集研发、生产、销售于一体的专业从事健康、营养广式点心的现代化企业，公司成立于2008年，注册资本612万元，总投资额5000万元;公司坐落于广东省番禺区，占地面积13500平方米，拥有现代化的生产车间，并引进全新先进的生产设备，日产能可达150万个广式包点。2022年委托我们进行品牌形象的升级和系列包装的设计，希望能开发一个代表品牌的IP形象并精准传达出老广东的早茶文化。",
+        mainImage: { url: "image/cases/case18/main.png", alt: "", width: 3400, height: 1500 },
+        images: [
+            { url: "cases/image/case18/1.png", alt: "", width: 1500, height: 0 },
+            { url: "cases/image/case18/2.png", alt: "", width: 1500, height: 0 },
+        ]
     };
-    const mainImage_2 = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case2 = {
-        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign }, id: "1", title: "2沉香系列包装视觉方案2",
-        desc: "2以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_2, images: []
-    };
-    const mainImage_3 = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case3 = {
-        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign }, id: "2", title: "3 BrandDesign",
-        desc: "3以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_3, images: []
-    };
-    const mainImage_4 = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case4 = {
-        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign }, id: "2", title: "4 BrandDesign",
-        desc: "4以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_4, images: []
-    };
-    const mainImage_5 = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case5 = {
-        type: { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign }, id: "2", title: "5 BrandDesign",
-        desc: "4以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_5, images: []
-    };
-    cases.push(case1);
-    cases.push(case2);
-    cases.push(case3);
-    cases.push(case4);
-    cases.push(case5);
+    casesForClient2.push(case18);
 
-    const mainImage_4_ = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case4_ = {
-        type: { type: CaseType.AlbumDesign, name: CaseTypeName.AlbumDesign }, id: "2", title: "1AlbumDesign",
-        desc: "1以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_4_, images: []
-    };
-    const mainImage_5_ = { url: "/image/case1/main.png", alt: "", width: 3400, height: 1500 };
-    const case5_ = {
-        type: { type: CaseType.AlbumDesign, name: CaseTypeName.AlbumDesign }, id: "2", title: "2AlbumDesign",
-        desc: "2以及极简的包装视觉来体现天然及高品质感,看起来克制，真实,自然,没有浮夸的修饰。放大沉香图片,突出出产品原料,满足消费者对于“天然、健康、高效”护肤品的追求。包装纸盒材质选择可以完全降解的环保纤维，内包装软管开口盖子使用原木材质,为化妆品增添一份自然质朴的气息,让人感觉更加亲近大自然呼应产品理念“自然之美”",
-        mainImage: mainImage_5_, images: []
-    };
+    const casesForFlat = new Array<Case>();
+    casesForFlat.push(case15);
+    casesForFlat.push(case16);
+    casesForFlat.push(case17);
+    casesForFlat.push(case18);
 
-    const cases2 = new Array<Case>();
-    cases2.push(case4_);
-    cases2.push(case5_);
-    map.set(CaseType.BrandDesign, cases);
-    map.set(CaseType.AlbumDesign, cases2);
+    const industryFood = { title: IndustryTypeName.Food, type: IndustryType.Food, clients: clientIndustryTypeFoods };
+    const industryDaily = { title: IndustryTypeName.DailyUse, type: IndustryType.DailyUse, clients: [] };
+    const industryBrand = { title: IndustryTypeName.Brand, type: IndustryType.Brand, clients: clientIndustryTypeBrand };
+    const industrysForFlat = Array<Industry>();
+    industrysForFlat.push(industryFood);
+    industrysForFlat.push(industryDaily);
+    industrysForFlat.push(industryBrand);
+    caseTabSubFlat.push(
+        {
+            data: { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
+            industrys: industrysForFlat,
+        });
+    caseTabs.push({ title: CaseHeaderTypeName.Flat, type: CaseHeaderType.Flat, sub: caseTabSubFlat });
+
+    caseTabs.push({ title: CaseHeaderTypeName.Space, type: CaseHeaderType.Space, sub: [] });
+
+    caseTabs.push({ title: CaseHeaderTypeName.Industry, type: CaseHeaderType.Industry, sub: [] });
+
+    //const map = new Map<CaseType, Case[]>();
+    //string为一层层生的,如:0,1,4
+    const mapCases = new Map<string, Case[]>();
+    const map = new Map<CaseHeaderType, CaseTabSub[]>();
+    map.set(CaseHeaderType.Flat, caseTabSubFlat);
+    /**
+     *  CaseTabSub:
+  data: CaseTypeData,
+  industry: Industry,//行业
+
+  CaseTypeData {
+  type: CaseType,
+  name: string,
+}
+     */
+    //key为:大类,行业,子类型,客户id; ""为返回全部 
+    mapCases.set(CaseHeaderType.Flat + ",,,", casesForFlat)
+    mapCases.set(CaseHeaderType.Flat + "," + IndustryType.Food + "," + CaseType.PackagingDesign + "," + client1.id, casesForClient1);
+    //map.set(CaseType.BrandDesign, cases);
+    //map.set(CaseType.AlbumDesign, cases2);
+    //tabsMap: Map<CaseHeaderType, CaseTabSub[]>
 
     return (
         <div>
@@ -83,7 +126,7 @@ const CaseIndexPage = () => {
                 <div>
                     <p className='absolute text-[40px]'>Work</p>
                     <div className=' h-[20px]' />
-                    <TabListComponent tabs={caseTypes} caseMap={map}/>
+                    <TabListComponent tabs={caseTabs} caseMap={mapCases} tabsMap={map} />
                 </div>
             </Container>
         </div>

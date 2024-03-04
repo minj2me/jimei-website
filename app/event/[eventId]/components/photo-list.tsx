@@ -10,7 +10,7 @@ const PhotoList: React.FC<PhotoListProps> = ({
     if (photoList === undefined) {
         return null;
     }
-    console.log("photo size:" + photoList.length);
+    //console.log("photo size:" + photoList.length);
     return (<div>
         <li className="col-span-1">
             <ul className="flex flex-col gap-4">

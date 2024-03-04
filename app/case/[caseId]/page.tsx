@@ -1,5 +1,6 @@
 //import getCase from '@/actions/get-case';
 import Container from '@/components/ui/container';
+import { Case } from '@/types';
 
 interface CasePageProps {
     params: {
@@ -19,10 +20,15 @@ const CasePage: React.FC<CasePageProps> = async ({
         return null;
     }*/
 
+    if (params.caseId === "") {
+        return;
+    }
+    const map = new Map<string, Case>();
+
     return (
-        <div>
+        <div className=' bg-[#f2f2f2]'>
             <Container>
-            CasePage
+                CasePage
             </Container>
         </div>
     );

@@ -49,23 +49,25 @@ const EventDetailPage: React.FC<EventDetailPageProps> = async ({
     };
     map.set("1", event1);
     const currentEvent = map?.get(params.eventId);
-    console.log("eventId:" + params.eventId);
+    //console.log("eventId:" + params.eventId);
     const imageSize = currentEvent?.images.length;
     const midIndex = imageSize ?? 0 < 2 ? 1 : (imageSize ?? 1 / 2) + 1;
-    console.log("midIndex:" + midIndex);
+    //console.log("midIndex:" + midIndex);
     return (
         <div className=' bg-[#f2f2f2]'>
             <Container>
                 <div className=' flex flex-row'>
-                    <div className=' flex flex-col  w-[50%]'>
-                        <p className=' text-[47px]'>{currentEvent?.title}</p>
-                        <p className=' text-[15px] text-[#999999]'>{currentEvent?.timeString}</p>
-                        <p className=' text-[15px]'>{currentEvent?.desc}</p>
-                        <p className=' text-[21px] mt-[188px]'>{currentEvent?.desc2}</p>
-                        <p className=' text-[18px] mt-[188px] text-[#8d8d8d]'>{currentEvent?.desc3}</p>
+                    <div className=' flex flex-col  w-[40%]'>
+                        <div className='w-[70%]'>
+                            <p className=' text-[47px]'>{currentEvent?.title}</p>
+                            <p className=' text-[15px] text-[#999999]'>{currentEvent?.timeString}</p>
+                            <p className=' text-[15px]'>{currentEvent?.desc}</p>
+                            <p className=' text-[21px] mt-[188px]'>{currentEvent?.desc2}</p>
+                            <p className=' text-[18px] mt-[188px] text-[#8d8d8d]'>{currentEvent?.desc3}</p>
+                        </div>
                     </div>
                     {/* 右边的图片 */}
-                    <div className="w-[50%]">
+                    <div className="w-[60%]">
                         <div className='w-full'>
                             <img src={currentEvent?.images[0]?.url} width={currentEvent?.images[0].width} />
                         </div>

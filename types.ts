@@ -8,9 +8,44 @@ export interface MainTab {
   name: string;
 };
 
+//案例主页的Tab数据
 export interface CaseTab {
-  title: string,
-  type: CaseTab,
+  title: CaseHeaderTypeName,
+  type: CaseHeaderType,
+  sub: CaseTabSub[],
+}
+
+export interface CaseTabSub {
+  //type: CaseHeaderType,
+  data: CaseTypeData,
+  industrys: Industry[],//行业
+}
+
+//行业类型
+export enum IndustryType {
+  Food = 0,//食品
+  DailyUse = 1,//日常用品
+  Brand = 2,//品牌
+}
+
+export enum IndustryTypeName {
+  Food = "食品",
+  DailyUse = "日常用品",
+  Brand = "品牌",
+}
+
+/**
+ * 客户数据
+ */
+export interface Client {
+  id: number,
+  name: string,
+}
+
+export interface Industry {
+  title: IndustryTypeName,
+  type: IndustryType,
+  clients: Array<Client>,
 }
 
 export interface CaseTypeData {
@@ -25,6 +60,21 @@ export enum CaseType {
   IndustrialDesign = 3,
   PPTDesign = 4,
   WebDesign = 5,
+  WebBusiness = 6,
+  HomeDesign = 7,
+  FactoryDesign = 8,
+}
+
+export enum CaseHeaderType {
+  Flat = 0,//平面
+  Space = 1,//空间 
+  Industry = 2,//工业
+}
+
+export enum CaseHeaderTypeName {
+  Flat = "平面设计",
+  Space = "空间设计",
+  Industry = "工业设计",
 }
 
 export enum CaseTypeName {
@@ -34,6 +84,9 @@ export enum CaseTypeName {
   IndustrialDesign = "工业设计",
   PPTDesign = "PPT设计",
   WebDesign = "网页设计",
+  WebBusiness = "商业",
+  HomeDesign = "家装",
+  FactoryDesign = "工厂设计",
 }
 
 export interface Worker {
@@ -44,10 +97,14 @@ export interface Worker {
 }
 
 export interface Case {
+  clientId: number,
   type: CaseTypeData,
   id: string,
   title: string,
-  desc: string,
+  title2: string,//展示在类型名上方
+  title3: string,//展示在类型名下方的其它信息 
+  desc: string,//设计理念 
+  projectBg: string,//项目背景
   mainImage: ImageData,
   images?: ImageData[],
 }
