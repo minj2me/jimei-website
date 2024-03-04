@@ -13,14 +13,18 @@ const CaseIndexPage = () => {
     }*/
 
     const caseTabs = new Array<CaseTab>();
-    const caseTabSubFlat = new Array<CaseTabSub>();
-    const clientIndustryTypeFoods = new Array<Client>();
-    const clientIndustryTypeBrand = new Array<Client>();
+    //const caseTabSubSpaceDesign = new Array<CaseTabSub>();
+    //const caseTabSubIndustryDesign = new Array<CaseTabSub>();
+    //每个大类型，都有自已的：行业，类型，客户
+    const clientIndustryTypeFoodsWithPackingDesignForFlat = new Array<Client>();//平面设计,产品包装设计，食品行业的客户列表
+    //const clientIndustryTypeFoodsForSpeacDesign = new Array<Client>();
+    const clientIndustryTypeBrandForFlat = new Array<Client>();//平面设计，品牌行业的客户列表
+    const mapClientIndustryTypeBrandForFlat = new Map<number, Array<Client>>();//平面设计，食品行业的map, key为类别
     //首席乐厨
     const client1 = { id: 0, name: "首席乐厨" };
     const client2 = { id: 1, name: "喜心点心" };
-    clientIndustryTypeFoods.push(client1);
-    clientIndustryTypeBrand.push(client2);
+    clientIndustryTypeFoodsWithPackingDesignForFlat.push(client1);
+    clientIndustryTypeBrandForFlat.push(client2);
     //const mainImage_ = { url: "image/cases/case15/main.png", alt: "", width: 3400, height: 1500 };
     const casesForClient1 = new Array<Case>();
     const case15 = {
@@ -79,29 +83,64 @@ const CaseIndexPage = () => {
     casesForFlat.push(case17);
     casesForFlat.push(case18);
 
-    const industryFood = { title: IndustryTypeName.Food, type: IndustryType.Food, clients: clientIndustryTypeFoods };
-    const industryDaily = { title: IndustryTypeName.DailyUse, type: IndustryType.DailyUse, clients: [] };
-    const industryBrand = { title: IndustryTypeName.Brand, type: IndustryType.Brand, clients: clientIndustryTypeBrand };
+    const mapForPackingDesignForIndustryFoodForFlat = new Map<CaseType,Client[]>();
+    mapForPackingDesignForIndustryFoodForFlat.set(CaseType.PackagingDesign,clientIndustryTypeFoodsWithPackingDesignForFlat)
+    const industryFoodForFlat = { title: IndustryTypeName.Food, type: IndustryType.Food, map: mapForPackingDesignForIndustryFoodForFlat};
+    const industryBrandForFlat = { title: IndustryTypeName.Brand, type: IndustryType.Brand, clients: clientIndustryTypeBrandForFlat };
+    //const industryFoodForSpeacDesign = { title: IndustryTypeName.Food, type: IndustryType.Food, clients: clientIndustryTypeFoods };
+
+    //const industryDaily = { title: IndustryTypeName.DailyUse, type: IndustryType.DailyUse, clients: [] };
+    //const industryBrand = { title: IndustryTypeName.Brand, type: IndustryType.Brand, clients: clientIndustryTypeBrand };
+
     const industrysForFlat = Array<Industry>();
-    industrysForFlat.push(industryFood);
-    industrysForFlat.push(industryDaily);
-    industrysForFlat.push(industryBrand);
-    caseTabSubFlat.push(
-        {
-            data: { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
-            industrys: industrysForFlat,
-        });
+    industrysForFlat.push(industryFoodForFlat);
+    //industrysForFlat.push(industryBrandForFlat);
+
+    /*const industrysForSpeacDesign = Array<Industry>();
+    industrysForSpeacDesign.push(industryFood);
+    industrysForSpeacDesign.push(industryDaily);
+    industrysForSpeacDesign.push(industryBrand);
+
+    const industrysForIndustryDesign = Array<Industry>();
+    industrysForIndustryDesign.push(industryFood);
+    industrysForIndustryDesign.push(industryDaily);
+    industrysForIndustryDesign.push(industryBrand);*/
+
+    const allTypes = [
+        { type: CaseType.HomeDesign, name: CaseTypeName.HomeDesign },
+        { type: CaseType.Business, name: CaseTypeName.Business },
+        { type: CaseType.PackagingDesign, name: CaseTypeName.PackagingDesign },
+        { type: CaseType.AlbumDesign, name: CaseTypeName.AlbumDesign },
+        { type: CaseType.BrandDesign, name: CaseTypeName.BrandDesign },
+        { type: CaseType.FactoryDesign, name: CaseTypeName.FactoryDesign },
+        { type: CaseType.IndustrialDesign, name: CaseTypeName.IndustrialDesign },
+        { type: CaseType.PPTDesign, name: CaseTypeName.PPTDesign },
+        { type: CaseType.WebDesign, name: CaseTypeName.WebDesign },
+    ];
+    const caseTabSubFlat = {
+        datas: allTypes,
+        industrys: industrysForFlat,
+    };
+    const caseTabSubSpeacDesign = {
+        datas: allTypes,
+        industrys: [],
+    };
+    const caseTabSubIndustryDesign = {
+        datas: allTypes,
+        industrys: [],
+    };
+
     caseTabs.push({ title: CaseHeaderTypeName.Flat, type: CaseHeaderType.Flat, sub: caseTabSubFlat });
-
-    caseTabs.push({ title: CaseHeaderTypeName.Space, type: CaseHeaderType.Space, sub: [] });
-
-    caseTabs.push({ title: CaseHeaderTypeName.Industry, type: CaseHeaderType.Industry, sub: [] });
+    caseTabs.push({ title: CaseHeaderTypeName.Space, type: CaseHeaderType.Space, sub: caseTabSubSpeacDesign });
+    caseTabs.push({ title: CaseHeaderTypeName.Industry, type: CaseHeaderType.Industry, sub: caseTabSubIndustryDesign });
 
     //const map = new Map<CaseType, Case[]>();
     //string为一层层生的,如:0,1,4
     const mapCases = new Map<string, Case[]>();
-    const map = new Map<CaseHeaderType, CaseTabSub[]>();
+    const map = new Map<CaseHeaderType, CaseTabSub>();
     map.set(CaseHeaderType.Flat, caseTabSubFlat);
+    map.set(CaseHeaderType.Space, caseTabSubSpeacDesign);
+    map.set(CaseHeaderType.Industry, caseTabSubIndustryDesign);
     /**
      *  CaseTabSub:
   data: CaseTypeData,
@@ -120,13 +159,13 @@ const CaseIndexPage = () => {
     //tabsMap: Map<CaseHeaderType, CaseTabSub[]>
 
     return (
-        <div>
+        <div className='bg-[#f2f2f2]'>
             <div className=' h-[10px]' />
             <Container>
                 <div>
                     <p className='absolute text-[40px]'>Work</p>
                     <div className=' h-[20px]' />
-                    <TabListComponent tabs={caseTabs} caseMap={mapCases} tabsMap={map} />
+                    <TabListComponent tabs={caseTabs} tabsMap={map} caseMap={mapCases} />
                 </div>
             </Container>
         </div>

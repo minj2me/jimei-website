@@ -12,12 +12,13 @@ export interface MainTab {
 export interface CaseTab {
   title: CaseHeaderTypeName,
   type: CaseHeaderType,
-  sub: CaseTabSub[],
+  sub: CaseTabSub,
 }
 
 export interface CaseTabSub {
   //type: CaseHeaderType,
-  data: CaseTypeData,
+  //clients:Client[],
+  datas: CaseTypeData[],
   industrys: Industry[],//行业
 }
 
@@ -45,7 +46,8 @@ export interface Client {
 export interface Industry {
   title: IndustryTypeName,
   type: IndustryType,
-  clients: Array<Client>,
+  //clients: Array<Client>,
+  map: Map<CaseType, Array<Client>>,
 }
 
 export interface CaseTypeData {
@@ -60,15 +62,15 @@ export enum CaseType {
   IndustrialDesign = 3,
   PPTDesign = 4,
   WebDesign = 5,
-  WebBusiness = 6,
+  Business = 6,
   HomeDesign = 7,
   FactoryDesign = 8,
 }
 
 export enum CaseHeaderType {
-  Flat = 0,//平面
-  Space = 1,//空间 
-  Industry = 2,//工业
+  Flat = 0,//平面设计
+  Space = 1,//空间设计
+  Industry = 2,//工业设计
 }
 
 export enum CaseHeaderTypeName {
@@ -84,7 +86,7 @@ export enum CaseTypeName {
   IndustrialDesign = "工业设计",
   PPTDesign = "PPT设计",
   WebDesign = "网页设计",
-  WebBusiness = "商业",
+  Business = "商业",
   HomeDesign = "家装",
   FactoryDesign = "工厂设计",
 }

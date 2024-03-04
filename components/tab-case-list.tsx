@@ -8,7 +8,7 @@ import CaseFilter from "@/app/case/[caseId]/components/case-filter";
 interface TabCaseListComponentProps {
     //tabs: CaseTypeData[],
     tabs: CaseTab[],
-    tabsMap: Map<CaseHeaderType, CaseTabSub[]>,
+    tabsMap: Map<CaseHeaderType, CaseTabSub>,
     caseMap: Map<string, Case[]>,
     //onTabChange(index: number): void;
 }
@@ -30,30 +30,33 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     //类型id
     const [currentType, setCurrentType] = useState<string>();
     //客户id
-    const [currentClient, setCurrentClient] = useState<string>();
-    const [currentTabSubs, setCurrentTabSubs] = useState<CaseTabSub[]>(tabsMap.get(tabs[currentIndex].type) ?? []);
+    //const [currentClient, setCurrentClient] = useState<string>();
+    //const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub>(tabsMap.get(tabs[currentIndex].type)!!);
+    const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub>(tabs[currentIndex].sub);
     //""为返回全部 
     const [currentCases, setCurrentCases] = useState<Case[]>(caseMap.get(tabs[currentIndex].type + ",,,") ?? []);
     const [dataOffset, setDataOffset] = useState(0);
-    if (!currentTabSubs) {
+    if (!currentTabSub) {
         return;
     }
     //console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
     return (
-        <div className=" w-[95%]">
+        <div className=" w-[95%] bg-[#f2f2f2]">
             <Tabs size='md' align="center" variant="unstyled" onChange={
                 (index) => {
                     setDataOffset(0),
                         //key为:大类,行业,子类型,客户id; 大类id+",,,"为返回全部 
                         setCurrentCases(caseMap.get(tabs[index].type + ",,,") ?? []),
-                        //setCurrentTabSubs(tabsMap.get(tabs[index].type) ?? []),
+                        setCurrentTabSub(tabsMap.get(tabs[index].type)!!),
+                        console.log("tabs[" + index + "].type:" + tabs[index].type),
+                        console.log("tabsMap.get(tabs[" + index + "].type:" + tabsMap.get(tabs[index].type)),
                         setCurrentIndex(index),
                         //onTabChange(index)
-                        setNeedReload(true);
-                    //reset value
-                    setTimeout(() => {
-                        setNeedReload(false)
-                    }, 500);
+                        setNeedReload(true),
+                        //reset value
+                        setTimeout(() => {
+                            setNeedReload(false)
+                        }, 500);
                     // Force refresh the page
                 }
             }>
@@ -71,7 +74,12 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                 />
                 <p className=' mt-[1.5px] w-full border-b border-dashed bg-[#999999]' />
                 <div className=" h-[40px]" />
-                <CaseFilter param={{ caseTabSub: currentTabSubs[currentIndex] }} />
+                <CaseFilter param={
+                    {
+                        caseTabSub: currentTabSub,
+                        onChange(matchKey) {
+                        },
+                    }} />
                 <div className=" h-[80px]" />
                 <TabPanels>
                     <CaseList cases={currentCases} itemsPerPage={9} tabChanged={needReload} />
