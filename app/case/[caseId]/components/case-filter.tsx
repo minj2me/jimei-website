@@ -15,13 +15,11 @@ import {
 } from '@chakra-ui/react'
 import { SearchIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
-/*import getIndustys from '@/actions/get-industrys';
-import getTypes from "@/actions/get-types";
-import getClients from "@/actions/get-clients";*/
+import { useSessionContext } from "@supabase/auth-helpers-react";
 
-import useGetIndustrys from '@/hooks/use-get-industry';
+/*import useGetIndustrys from '@/hooks/use-get-industry';
 import useGetClients from '@/hooks/use-get-clients';
-import useGetTypes from '@/hooks/use-get-types';
+import useGetTypes from '@/hooks/use-get-types';*/
 
 interface CaseFilterProps {
     param: {
@@ -33,28 +31,130 @@ interface CaseFilterProps {
 const CaseFilter: React.FC<CaseFilterProps> = ({
     param
 }) => {
-    //if (!param || !param.caseTabSub || !param.caseTabSub.industrys) {
     if (!param || !param.caseTypeId) {
         return;
     }
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { supabaseClient } = useSessionContext();
+
+    console.log("param.caseTypeId:" + param.caseTypeId);
+    const caseTabId = param.caseTypeId;
+    const NO_VALUE = -1;
+    const industryId: number = NO_VALUE;
+    const typeId: number = NO_VALUE;
+
+    const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>();
+    const [currentTypes, setCurrentTypes] = useState<CaseType[]>([]);
+    const [currentClients, setCurrentClients] = useState<Client[]>([]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchData = async () => {
+            try {
+                let { data, error } = await supabaseClient
+                    .from('Industry')
+                    .select("*")
+                    .eq('caseTabId', caseTabId);
+                if (!error) {
+                    setCurrentIndustrys(data as Industry[]);
+                    console.log("useGetIndustrys:" + (data as Industry[]).length);
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                setIsLoading(false);
+                console.error('Error fetching data:', error);
+            }
+            setIsLoading(false);
+        };
+        fetchData();
+    }, [caseTabId]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                let data: any;
+                let error: any;
+                if (industryId === NO_VALUE) {
+                    let { data: data_, error: error_ } = await supabaseClient
+                        .from('Type')
+                        .select("*")
+                        .eq('caseTabId', caseTabId);
+                    data = data_;
+                    error = error_;
+                } else {
+                    let { data: data_, error: error_ } = await supabaseClient
+                        .from('Type')
+                        .select("*")
+                        .eq('caseTabId', caseTabId).eq("industryId", industryId);
+                    data = data_;
+                    error = error_;
+                }
+                if (!error) {
+                    const datas = data as CaseType[];
+                    setCurrentTypes(datas);
+                }
+            } catch (error) {
+                //setIsLoading(false);
+                console.error('Error fetching data:', error);
+            }
+            //setIsLoading(false);
+        };
+        fetchData();
+    }, [caseTabId, industryId]);
+
+    useEffect(() => {
+        //setIsLoading(true);
+        const fetchData = async () => {
+            try {
+                let data: any;
+                let error: any;
+                if (industryId === NO_VALUE || typeId === NO_VALUE) {
+                    let { data: data_, error: error_ } = await supabaseClient
+                        .from('Client')
+                        .select("*")
+                        .eq('caseTabId', caseTabId);
+                    data = data_;
+                    error = error_;
+                } else {
+                    let { data: data_, error: error_ } = await supabaseClient
+                        .from('Client')
+                        .select("*")
+                        .eq('caseTabId', caseTabId).eq("industryId", industryId).eq("typeId", typeId);
+                    data = data_;
+                    error = error_;
+                }
+                if (!error) {
+                    setCurrentClients(data as Client[]);
+                    console.log("useGetClients:" + (data as Client[]).length);
+                    //setIsLoading(false);
+                }
+            } catch (error) {
+                //setIsLoading(false);
+                console.error('Error fetching data:', error);
+            }
+            //setIsLoading(false);
+        };
+        fetchData();
+    }, [caseTabId, industryId, typeId]);
+
     const [industry, setIndustry] = useState<string>("全部")
     const [industryValue, setIndustryValue] = useState<Industry>();
     const [type, setType] = useState<string>("全部");
-    //const [currentTypes, setCurrentTypes] = useState<CaseType[]>();
     const [client, setClient] = useState<string>("全部")
-    //const [currentClients, setCurrentClients] = useState<Client[]>([]);
-
-    const {isLoading, industrys} =  useGetIndustrys(param.caseTypeId);
-    const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>(industrys);
-    const dataType =  useGetTypes(param.caseTypeId, industrys[0]?.id);
-    const [currentTypes, setCurrentTypes] = useState<CaseType[]>(dataType.types);
-    const dataClients =  useGetClients(param.caseTypeId, industrys[0]?.id, dataType.types[0]?.id);
-    const [currentClients, setCurrentClients] = useState<Client[]>(dataClients.clients);
+    //const {isLoading, industrys} =  useGetIndustrys(param.caseTypeId);
+    //const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>(industrys);
+    //const dataType = useGetTypes(param.caseTypeId, industrys[0]?.id);
+    //const [currentTypes, setCurrentTypes] = useState<CaseType[]>(dataType.types);
+    //const dataClients = useGetClients(param.caseTypeId, industrys[0]?.id, dataType.types[0]?.id);
 
     const filterClient = async (caseTabId: number, industryId: number, typeId: number) => {
-        setCurrentClients(useGetClients(caseTabId, industryId, typeId).clients)
+        //setCurrentClients(useGetClients(caseTabId, industryId, typeId).clients)
         console.log("type:" + type + ", client size:" + currentClients.length);
+    }
+
+    if (isLoading) {
+        return (<p className="flex w-[100%] h-[800px] text-center items-center justify-center">加载中...</p>);
     }
 
     return (
@@ -69,14 +169,13 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                             <MenuButton>
                                 <ChevronDownIcon />
                             </MenuButton>
-                            {/* <MenuList>
-                                <MenuItem>Download</MenuItem>
-                                <MenuItem onClick={() => alert('Kagebunshin')}>Create a Copy</MenuItem>
-                            </MenuList> */}
                             <MenuList>
                                 {
-                                    industrys?.map((item) => (
-                                        <MenuItem onClick={() => { setIndustry(item.title), setIndustryValue(item) }} value={item.title}>{item.title}</MenuItem>
+                                    currentIndustrys?.map((item) => (
+                                        <MenuItem onClick={() => {
+                                            setIndustry(item.title);
+                                            setIndustryValue(item);
+                                        }} value={item.title}>{item.title}</MenuItem>
                                     ))
                                 }
                             </MenuList>

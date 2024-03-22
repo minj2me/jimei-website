@@ -8,6 +8,8 @@ const useGetIndustrys = (caseTabId: number) => {
     const [industrys, setIndustrys] = useState<Industry[]>([]);
     const { supabaseClient } = useSessionContext();
 
+    console.log("caseTabId:"+caseTabId);
+
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
@@ -18,6 +20,7 @@ const useGetIndustrys = (caseTabId: number) => {
                     .eq('caseTabId', caseTabId);
                 if (!error) {
                     setIndustrys(data as Industry[]);
+                    console.log("useGetIndustrys:"+(data as Industry[]).length);
                     setIsLoading(false);
                 }
             } catch (error) {

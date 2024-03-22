@@ -15,9 +15,6 @@ const CaseIndexPage = () => {
     if (isLoading) {
         return (<p className="flex w-[100%] h-[800px] text-center items-center justify-center">加载中...</p>);
     }
-    if (!caseTabs){
-        return;
-    }
     console.log("caseTabs size:" + caseTabs.length);
     return (
         <div className='bg-[#f2f2f2]'>
