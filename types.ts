@@ -10,9 +10,11 @@ export interface MainTab {
 
 //案例主页的Tab数据
 export interface CaseTab {
-  title: CaseHeaderTypeName,
+  //title: CaseHeaderTypeName,
+  id: number,
+  title: string,
   type: CaseHeaderType,
-  sub: CaseTabSub,
+  //sub: CaseTabSub,
 }
 
 export interface CaseTabSub {
@@ -41,13 +43,26 @@ export enum IndustryTypeName {
 export interface Client {
   id: number,
   name: string,
+  caseTabId: number,
+  industryId: number,
+  typeId: number,
 }
 
 export interface Industry {
-  title: IndustryTypeName,
-  type: IndustryType,
+  //title: IndustryTypeName,
+  id: number
+  title: string,
+  caseTabId: number,
+  //type: IndustryType,
   //clients: Array<Client>,
-  map: Map<CaseType, Array<Client>>,
+  //map: Map<CaseType, Array<Client>>,
+}
+
+export interface CaseType {
+  id: number,
+  title: string,
+  industryId: number,
+  caseTabId: number,
 }
 
 export interface CaseTypeData {
@@ -55,7 +70,7 @@ export interface CaseTypeData {
   name: string,
 }
 
-export enum CaseType {
+/*export enum CaseType {
   BrandDesign = 0,
   AlbumDesign = 1,//画册设计
   PackagingDesign = 2,
@@ -65,7 +80,7 @@ export enum CaseType {
   Business = 6,
   HomeDesign = 7,
   FactoryDesign = 8,
-}
+}*/
 
 export enum CaseHeaderType {
   Flat = 0,//平面设计

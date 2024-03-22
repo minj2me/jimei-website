@@ -8,13 +8,14 @@ import CaseFilter from "@/app/case/[caseId]/components/case-filter";
 interface TabCaseListComponentProps {
     //tabs: CaseTypeData[],
     tabs: CaseTab[],
-    tabsMap: Map<CaseHeaderType, CaseTabSub>,
-    caseMap: Map<string, Case[]>,
+    //tabsMap?: Map<CaseHeaderType, CaseTabSub>,
+    //caseMap?: Map<string, Case[]>,
     //onTabChange(index: number): void;
 }
 
 const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
-    tabs, tabsMap, caseMap
+    //tabs, tabsMap, caseMap
+    tabs
 }) => {
     if (tabs === undefined || tabs === null) {
         return;
@@ -30,15 +31,15 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     //类型id
     const [currentType, setCurrentType] = useState<string>();
     //客户id
-    //const [currentClient, setCurrentClient] = useState<string>();
-    //const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub>(tabsMap.get(tabs[currentIndex].type)!!);
-    const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub>(tabs[currentIndex].sub);
+    //const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub>(tabs[currentIndex]?.sub);
+    //const [currentTabSub, setCurrentTabSub] = useState<CaseTabSub | undefined>(undefined);
+    const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(tabs[0]?.id);
     //""为返回全部 
-    const [currentCases, setCurrentCases] = useState<Case[]>(caseMap.get(tabs[currentIndex].type + ",,,") ?? []);
+    //const [currentCases, setCurrentCases] = useState<Case[]>(caseMap?.get(tabs[currentIndex].type + ",,,") ?? []);
     const [dataOffset, setDataOffset] = useState(0);
-    if (!currentTabSub) {
+    /*if (!currentTabSub) {
         return;
-    }
+    }*/
     //console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
     return (
         <div className=" w-[95%] bg-[#f2f2f2]">
@@ -46,10 +47,10 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                 (index) => {
                     setDataOffset(0),
                         //key为:大类,行业,子类型,客户id; 大类id+",,,"为返回全部 
-                        setCurrentCases(caseMap.get(tabs[index].type + ",,,") ?? []),
-                        setCurrentTabSub(tabsMap.get(tabs[index].type)!!),
+                        //setCurrentCases(caseMap.get(tabs[index].type + ",,,") ?? []),
+                        //setCurrentTabSub(tabsMap.get(tabs[index].type)!!),
+                        setCurrentCaseTabId(tabs[index].id),
                         console.log("tabs[" + index + "].type:" + tabs[index].type),
-                        console.log("tabsMap.get(tabs[" + index + "].type:" + tabsMap.get(tabs[index].type)),
                         setCurrentIndex(index),
                         //onTabChange(index)
                         setNeedReload(true),
@@ -76,14 +77,14 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                 <div className=" h-[40px]" />
                 <CaseFilter param={
                     {
-                        caseTabSub: currentTabSub,
+                        caseTypeId: currentCaseTabId,
                         onChange(matchKey) {
                         },
                     }} />
                 <div className=" h-[80px]" />
-                <TabPanels>
+                {/* <TabPanels>
                     <CaseList cases={currentCases} itemsPerPage={9} tabChanged={needReload} />
-                </TabPanels>
+                </TabPanels> */}
             </Tabs>
         </div>
     );

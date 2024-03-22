@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { CaseTabSub, Industry, Client } from "@/types";
+"use client";
+
+import { useState, useEffect } from 'react';
+import { CaseTabSub, Industry, Client, CaseType } from "@/types";
 import {
     Menu,
     MenuButton,
@@ -13,10 +15,18 @@ import {
 } from '@chakra-ui/react'
 import { SearchIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
+/*import getIndustys from '@/actions/get-industrys';
+import getTypes from "@/actions/get-types";
+import getClients from "@/actions/get-clients";*/
+
+import useGetIndustrys from '@/hooks/use-get-industry';
+import useGetClients from '@/hooks/use-get-clients';
+import useGetTypes from '@/hooks/use-get-types';
 
 interface CaseFilterProps {
     param: {
-        caseTabSub: CaseTabSub,
+        //caseTabSub: CaseTabSub,
+        caseTypeId: number,
         onChange: (matchKey: string) => void,
     }
 }
@@ -24,21 +34,27 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
     param
 }) => {
     //if (!param || !param.caseTabSub || !param.caseTabSub.industrys) {
-    if (!param || !param.caseTabSub) {
+    if (!param || !param.caseTypeId) {
         return;
     }
-    console.log("param.caseTabSub.industrys size:" + param.caseTabSub.industrys.length);
+
     const [industry, setIndustry] = useState<string>("全部")
     const [industryValue, setIndustryValue] = useState<Industry>();
     const [type, setType] = useState<string>("全部");
+    //const [currentTypes, setCurrentTypes] = useState<CaseType[]>();
     const [client, setClient] = useState<string>("全部")
-    const [currentClients, setCurrentClients] = useState<Client[]>([]);
+    //const [currentClients, setCurrentClients] = useState<Client[]>([]);
 
-    const filterClient = (industry: Industry | undefined, type: number) => {
-        if (industry) {
-            setCurrentClients(industry.map.get(type) ?? [])
-            console.log("type:" + type + ", client size:" + currentClients.length);
-        }
+    const {isLoading, industrys} =  useGetIndustrys(param.caseTypeId);
+    const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>(industrys);
+    const dataType =  useGetTypes(param.caseTypeId, industrys[0]?.id);
+    const [currentTypes, setCurrentTypes] = useState<CaseType[]>(dataType.types);
+    const dataClients =  useGetClients(param.caseTypeId, industrys[0]?.id, dataType.types[0]?.id);
+    const [currentClients, setCurrentClients] = useState<Client[]>(dataClients.clients);
+
+    const filterClient = async (caseTabId: number, industryId: number, typeId: number) => {
+        setCurrentClients(useGetClients(caseTabId, industryId, typeId).clients)
+        console.log("type:" + type + ", client size:" + currentClients.length);
     }
 
     return (
@@ -59,7 +75,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                             </MenuList> */}
                             <MenuList>
                                 {
-                                    param.caseTabSub.industrys.map((item) => (
+                                    industrys?.map((item) => (
                                         <MenuItem onClick={() => { setIndustry(item.title), setIndustryValue(item) }} value={item.title}>{item.title}</MenuItem>
                                     ))
                                 }
@@ -79,12 +95,12 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                             </MenuButton>
                             <MenuList>
                                 {
-                                    param.caseTabSub.datas.map((item) => (
+                                    currentTypes?.map((item) => (
                                         <MenuItem onClick={() => {
-                                            setType(item.name),
+                                            setType(item.title),
                                                 //setCurrentClients(industryValue?.clients ?? []);
-                                                filterClient(industryValue ?? undefined, item.type);
-                                        }} value={item.type}>{item.name}</MenuItem>
+                                                filterClient(param.caseTypeId, industryValue?.id ?? 0, item.id);
+                                        }} value={item.id}>{item.title}</MenuItem>
                                     ))
                                 }
                             </MenuList>
@@ -103,7 +119,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                             </MenuButton>
                             <MenuList>
                                 {
-                                    currentClients.map((item) => (
+                                    currentClients?.map((item) => (
                                         <MenuItem onClick={() => { }} value={item.id}>{item.name}</MenuItem>
                                     ))
                                 }

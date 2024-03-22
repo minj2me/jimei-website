@@ -1,4 +1,5 @@
 import ToastProvider from '@/providers/toast-provider'
+import SupabaseProvider from "@/providers/supabase-provider";
 //要加上ChakraProvider,不然样式不起作用
 import { ChakraProvider } from '@chakra-ui/react';
 import { Urbanist } from 'next/font/google'
@@ -22,12 +23,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={font.className}>
         <ToastProvider />
+        <SupabaseProvider>
         <ChakraProvider>
           <Header />
           {children}
           <div className="h-[200px]" />
           <Footer />
         </ChakraProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );
