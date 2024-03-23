@@ -39,23 +39,41 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
     const { supabaseClient } = useSessionContext();
 
     console.log("param.caseTypeId:" + param.caseTypeId);
-    const caseTabId = param.caseTypeId;
+    //const caseTabId = param.caseTypeId;
+    //const [caseTabId, setCaseTabId] = useState<number>(param.caseTypeId);
+    //console.log("caseTabId:" + caseTabId);
     const NO_VALUE = -1;
-    const industryId: number = NO_VALUE;
-    const typeId: number = NO_VALUE;
+    const ALL="全部";
+    const [industryId, setIndustryId] = useState<number>(NO_VALUE);
+    const [typeId, setTypeId] = useState<number>(NO_VALUE);
+    //const industryId: number = NO_VALUE;
+    //const typeId: number = NO_VALUE;
 
     const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>();
     const [currentTypes, setCurrentTypes] = useState<CaseType[]>([]);
     const [currentClients, setCurrentClients] = useState<Client[]>([]);
 
+    const [industry, setIndustry] = useState<string>(ALL)
+    const [type, setType] = useState<string>(ALL);
+    const [client, setClient] = useState<string>(ALL)
+
+    useEffect(() => {
+        setIndustryId(NO_VALUE);
+        setTypeId(NO_VALUE);
+        setIndustry(ALL);
+        setType(ALL);
+        setClient(ALL);
+    }, [param.caseTypeId]);
+
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
             try {
+                console.log("fetching Industry Data, caseTabId:" + param.caseTypeId);
                 let { data, error } = await supabaseClient
                     .from('Industry')
                     .select("*")
-                    .eq('caseTabId', caseTabId);
+                    .eq('caseTabId', param.caseTypeId);
                 if (!error) {
                     setCurrentIndustrys(data as Industry[]);
                     console.log("useGetIndustrys:" + (data as Industry[]).length);
@@ -68,31 +86,33 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             setIsLoading(false);
         };
         fetchData();
-    }, [caseTabId]);
+    }, [param.caseTypeId]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 let data: any;
                 let error: any;
+                console.log("fetching Type Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId);
                 if (industryId === NO_VALUE) {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Type')
                         .select("*")
-                        .eq('caseTabId', caseTabId);
+                        .eq('caseTabId', param.caseTypeId);
                     data = data_;
                     error = error_;
                 } else {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Type')
                         .select("*")
-                        .eq('caseTabId', caseTabId).eq("industryId", industryId);
+                        .eq('caseTabId', param.caseTypeId).eq("industryId", industryId);
                     data = data_;
                     error = error_;
                 }
                 if (!error) {
                     const datas = data as CaseType[];
                     setCurrentTypes(datas);
+                    console.log("useGetTypes:" + datas.length);
                 }
             } catch (error) {
                 //setIsLoading(false);
@@ -101,7 +121,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             //setIsLoading(false);
         };
         fetchData();
-    }, [caseTabId, industryId]);
+    }, [param.caseTypeId, industryId]);
 
     useEffect(() => {
         //setIsLoading(true);
@@ -109,18 +129,33 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             try {
                 let data: any;
                 let error: any;
-                if (industryId === NO_VALUE || typeId === NO_VALUE) {
+                console.log("fetching Client Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId + ", typeId:" + typeId);
+                if (industryId === NO_VALUE && typeId === NO_VALUE) {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Client')
                         .select("*")
-                        .eq('caseTabId', caseTabId);
+                        .eq('caseTabId', param.caseTypeId);
                     data = data_;
                     error = error_;
+                } else if (industryId === NO_VALUE && typeId !== NO_VALUE) {
+                    let { data: data_, error: error_ } = await supabaseClient
+                        .from('Client')
+                        .select("*")
+                        .eq('caseTabId', param.caseTypeId).eq("typeId", typeId);
+                    data = data_;
+                    error = error_;
+                } else if (industryId !== NO_VALUE && typeId === NO_VALUE) {
+                    let { data: data_, error: error_ } = await supabaseClient
+                    .from('Client')
+                    .select("*")
+                    .eq('caseTabId', param.caseTypeId).eq("industryId", industryId);
+                data = data_;
+                error = error_;
                 } else {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Client')
                         .select("*")
-                        .eq('caseTabId', caseTabId).eq("industryId", industryId).eq("typeId", typeId);
+                        .eq('caseTabId', param.caseTypeId).eq("industryId", industryId).eq("typeId", typeId);
                     data = data_;
                     error = error_;
                 }
@@ -136,22 +171,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             //setIsLoading(false);
         };
         fetchData();
-    }, [caseTabId, industryId, typeId]);
-
-    const [industry, setIndustry] = useState<string>("全部")
-    const [industryValue, setIndustryValue] = useState<Industry>();
-    const [type, setType] = useState<string>("全部");
-    const [client, setClient] = useState<string>("全部")
-    //const {isLoading, industrys} =  useGetIndustrys(param.caseTypeId);
-    //const [currentIndustrys, setCurrentIndustrys] = useState<Industry[]>(industrys);
-    //const dataType = useGetTypes(param.caseTypeId, industrys[0]?.id);
-    //const [currentTypes, setCurrentTypes] = useState<CaseType[]>(dataType.types);
-    //const dataClients = useGetClients(param.caseTypeId, industrys[0]?.id, dataType.types[0]?.id);
-
-    const filterClient = async (caseTabId: number, industryId: number, typeId: number) => {
-        //setCurrentClients(useGetClients(caseTabId, industryId, typeId).clients)
-        console.log("type:" + type + ", client size:" + currentClients.length);
-    }
+    }, [param.caseTypeId, industryId, typeId]);
 
     if (isLoading) {
         return (<p className="flex w-[100%] h-[800px] text-center items-center justify-center">加载中...</p>);
@@ -174,7 +194,9 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                                     currentIndustrys?.map((item) => (
                                         <MenuItem onClick={() => {
                                             setIndustry(item.title);
-                                            setIndustryValue(item);
+                                            //setIndustryValue(item);
+                                            setIndustryId(item.id);
+                                            console.log("industryId:" + industryId);
                                         }} value={item.title}>{item.title}</MenuItem>
                                     ))
                                 }
@@ -197,8 +219,9 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                                     currentTypes?.map((item) => (
                                         <MenuItem onClick={() => {
                                             setType(item.title),
-                                                //setCurrentClients(industryValue?.clients ?? []);
-                                                filterClient(param.caseTypeId, industryValue?.id ?? 0, item.id);
+                                                setTypeId(item.id),
+                                                console.log("typeId:" + typeId);
+                                            //setCurrentClients(industryValue?.clients ?? []);
                                         }} value={item.id}>{item.title}</MenuItem>
                                     ))
                                 }

@@ -1,20 +1,8 @@
 import { CaseTab } from "@/types";
 import { useEffect, useState, useMemo } from "react";
-/*import { createClient } from '@supabase/supabase-js'
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";*/
 import { useSessionContext } from "@supabase/auth-helpers-react";
 
 const useGetCaseTab = () => {
-    /*const supabase = createClient(supabaseUrl, supabaseKey);
-    let { data, error } = await supabase
-        .from('CaseTab')
-        .select('*')
-    if (!error) {
-        return data as CaseTab[];
-    }
-    return [];*/
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [caseTabs, setCaseTabs] = useState<CaseTab[]>([]);
     const { supabaseClient } = useSessionContext();

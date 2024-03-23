@@ -1,10 +1,7 @@
 "use client";
 import Container from '@/components/ui/container';
 import TabCaseListComponent from "@/components/tab-case-list";
-//import getCaseTab from "@/actions/get-case-tab";
 import useGetCaseTab from "@/hooks/use-get-case-tab";
-//import { CaseTypeData, IndustryTypeName, CaseType, CaseTypeName, Case, CaseTab, CaseHeaderTypeName, CaseHeaderType, CaseTabSub, IndustryType, Client, Industry } from '@/types';
-//import CaseList from '@/components/case-list';
 
 /**
  * 案例主页
