@@ -37,6 +37,13 @@ export enum IndustryTypeName {
   Brand = "品牌",
 }
 
+export interface CaseFilterCallback {
+  caseTabId: number,
+  industryId: number,
+  typeId: number,
+  clientId: number,
+}
+
 /**
  * 客户数据
  */
@@ -114,9 +121,12 @@ export interface Worker {
 }
 
 export interface Case {
+  id: number,
+  caseTabId: number,
+  industryId: number,
+  typeId: number,
   clientId: number,
   type: CaseTypeData,
-  id: string,
   title: string,
   title2: string,//展示在类型名上方
   title3: string,//展示在类型名下方的其它信息 

@@ -5,13 +5,14 @@ import ReactPaginate from 'react-paginate';
 import { useState, useEffect } from "react";
 
 interface CaseListProps {
+    isLoading: boolean,
     cases: Case[],
     itemsPerPage: number,
     tabChanged?: boolean,
 }
 
 const CaseList: React.FC<CaseListProps> = ({
-    cases, itemsPerPage, tabChanged
+    isLoading, cases, itemsPerPage, tabChanged
 }) => {
     //const [currentItems, setCurrentItems] = useState<Case[]>(cases);
     //console.log("dataType:" + dataType);
@@ -26,10 +27,12 @@ const CaseList: React.FC<CaseListProps> = ({
     let currentItems = cases.slice(itemOffset, endOffset);
     const pageCount = Math.ceil(cases.length / itemsPerPage);
     useEffect(() => {
-        //console.log("tabChanged:"+tabChanged);
         setItemOffset(0);
         setCurrentPage(0);
     }, [tabChanged]);// when the categoryInput changes, the pagination will be reset back to 0*/
+    if (isLoading) {
+        return (<p className="flex w-[100%] h-[800px] text-center items-center justify-center">数据加载中...</p>);
+    }
     return (
         <div>
             <div className=" grid grid-cols-3 gap-[40px]">

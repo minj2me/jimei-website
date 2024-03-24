@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { CaseTabSub, Industry, Client, CaseType } from "@/types";
+import { CaseFilterCallback, Industry, Client, CaseType } from "@/types";
 import {
     Menu,
     MenuButton,
@@ -25,7 +25,7 @@ interface CaseFilterProps {
     param: {
         //caseTabSub: CaseTabSub,
         caseTypeId: number,
-        onChange: (matchKey: string) => void,
+        onChange: (callback: CaseFilterCallback) => void,
     }
 }
 const CaseFilter: React.FC<CaseFilterProps> = ({
@@ -38,14 +38,14 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { supabaseClient } = useSessionContext();
 
-    console.log("param.caseTypeId:" + param.caseTypeId);
     //const caseTabId = param.caseTypeId;
     //const [caseTabId, setCaseTabId] = useState<number>(param.caseTypeId);
     //console.log("caseTabId:" + caseTabId);
     const NO_VALUE = -1;
-    const ALL="全部";
+    const ALL = "全部";
     const [industryId, setIndustryId] = useState<number>(NO_VALUE);
     const [typeId, setTypeId] = useState<number>(NO_VALUE);
+    const [clientId, setClientId] = useState<number>(NO_VALUE);
     //const industryId: number = NO_VALUE;
     //const typeId: number = NO_VALUE;
 
@@ -63,6 +63,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
         setIndustry(ALL);
         setType(ALL);
         setClient(ALL);
+        param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: clientId })
     }, [param.caseTypeId]);
 
     useEffect(() => {
@@ -76,8 +77,9 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                     .eq('caseTabId', param.caseTypeId);
                 if (!error) {
                     setCurrentIndustrys(data as Industry[]);
-                    console.log("useGetIndustrys:" + (data as Industry[]).length);
+                    //console.log("useGetIndustrys:" + (data as Industry[]).length);
                     setIsLoading(false);
+                    param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: clientId })
                 }
             } catch (error) {
                 setIsLoading(false);
@@ -93,7 +95,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             try {
                 let data: any;
                 let error: any;
-                console.log("fetching Type Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId);
+                //console.log("fetching Type Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId);
                 if (industryId === NO_VALUE) {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Type')
@@ -112,7 +114,8 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                 if (!error) {
                     const datas = data as CaseType[];
                     setCurrentTypes(datas);
-                    console.log("useGetTypes:" + datas.length);
+                    //console.log("useGetTypes:" + datas.length);
+                    param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: clientId })
                 }
             } catch (error) {
                 //setIsLoading(false);
@@ -129,7 +132,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
             try {
                 let data: any;
                 let error: any;
-                console.log("fetching Client Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId + ", typeId:" + typeId);
+                //console.log("fetching Client Data, caseTabId:" + param.caseTypeId + ", industryId:" + industryId + ", typeId:" + typeId);
                 if (industryId === NO_VALUE && typeId === NO_VALUE) {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Client')
@@ -146,11 +149,11 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                     error = error_;
                 } else if (industryId !== NO_VALUE && typeId === NO_VALUE) {
                     let { data: data_, error: error_ } = await supabaseClient
-                    .from('Client')
-                    .select("*")
-                    .eq('caseTabId', param.caseTypeId).eq("industryId", industryId);
-                data = data_;
-                error = error_;
+                        .from('Client')
+                        .select("*")
+                        .eq('caseTabId', param.caseTypeId).eq("industryId", industryId);
+                    data = data_;
+                    error = error_;
                 } else {
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Client')
@@ -161,7 +164,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                 }
                 if (!error) {
                     setCurrentClients(data as Client[]);
-                    console.log("useGetClients:" + (data as Client[]).length);
+                    param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: clientId })
                     //setIsLoading(false);
                 }
             } catch (error) {
@@ -196,7 +199,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                                             setIndustry(item.title);
                                             //setIndustryValue(item);
                                             setIndustryId(item.id);
-                                            console.log("industryId:" + industryId);
+                                            //console.log("industryId:" + industryId);
                                         }} value={item.title}>{item.title}</MenuItem>
                                     ))
                                 }
@@ -219,8 +222,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                                     currentTypes?.map((item) => (
                                         <MenuItem onClick={() => {
                                             setType(item.title),
-                                                setTypeId(item.id),
-                                                console.log("typeId:" + typeId);
+                                                setTypeId(item.id)
                                             //setCurrentClients(industryValue?.clients ?? []);
                                         }} value={item.id}>{item.title}</MenuItem>
                                     ))
@@ -242,7 +244,11 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                             <MenuList>
                                 {
                                     currentClients?.map((item) => (
-                                        <MenuItem onClick={() => { }} value={item.id}>{item.name}</MenuItem>
+                                        <MenuItem onClick={() => {
+                                            setClient(item.name),
+                                            setClientId(item.id),
+                                            param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: item.id })
+                                        }} value={item.id}>{item.name}</MenuItem>
                                     ))
                                 }
                             </MenuList>
