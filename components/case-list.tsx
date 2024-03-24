@@ -1,3 +1,4 @@
+"use client";
 import { Case, CaseType } from "@/types";
 import CaseItem from "@/components/case-item";
 //import Paginate from "@/components/ui/paginate";
@@ -38,7 +39,7 @@ const CaseList: React.FC<CaseListProps> = ({
             <div className=" grid grid-cols-3 gap-[40px]">
                 {
                     currentItems.map((item) => (
-                        <CaseItem caseData={item} />
+                        <CaseItem key={item.id} caseData={item} />
                     ))
                 }
             </div>

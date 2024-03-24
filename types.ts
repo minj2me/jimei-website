@@ -174,4 +174,5 @@ export interface ImageData {
   alt?: string,
   width: number,
   height: number,
+  is_main: boolean,
 }

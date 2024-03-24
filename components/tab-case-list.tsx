@@ -31,15 +31,16 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     //const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [needReload, setNeedReload] = useState<boolean>(false);
     //const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(tabs[0]?.id);
-    const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(NO_VALUE);
+    //const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(NO_VALUE);
+    const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(1);
     const [currentCases, setCurrentCases] = useState<Case[]>([]);
 
-    console.log("tabs[0]?.id:" + tabs[0]?.id + ", currentCaseTabId:" + currentCaseTabId);
+    //console.log("tabs[0]?.id:" + tabs[0]?.id + ", currentCaseTabId:" + currentCaseTabId);
 
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
-            console.log("queryString, fetching cases data, caseTabId:" + currentCaseTabId + ", industryId:" + industryId + ", typeId:" + typeId + ", clientId:" + clientId);
+            //console.log("queryString, fetching cases data, caseTabId:" + currentCaseTabId + ", industryId:" + industryId + ", typeId:" + typeId + ", clientId:" + clientId);
             try {
                 let data: any;
                 let error: any;

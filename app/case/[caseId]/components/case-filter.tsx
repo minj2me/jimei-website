@@ -40,7 +40,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
 
     //const caseTabId = param.caseTypeId;
     //const [caseTabId, setCaseTabId] = useState<number>(param.caseTypeId);
-    //console.log("caseTabId:" + caseTabId);
+    console.log("caseTabId:" + param.caseTypeId);
     const NO_VALUE = -1;
     const ALL = "全部";
     const [industryId, setIndustryId] = useState<number>(NO_VALUE);
@@ -60,6 +60,7 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
     useEffect(() => {
         setIndustryId(NO_VALUE);
         setTypeId(NO_VALUE);
+        setClientId(NO_VALUE);
         setIndustry(ALL);
         setType(ALL);
         setClient(ALL);
