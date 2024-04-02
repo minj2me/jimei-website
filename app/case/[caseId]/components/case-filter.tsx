@@ -23,8 +23,10 @@ import useGetTypes from '@/hooks/use-get-types';*/
 
 interface CaseFilterProps {
     param: {
-        //caseTabSub: CaseTabSub,
         caseTypeId: number,
+        showAddType?: boolean,
+        //showEditText?true: boolean,
+        showEditText?: boolean,
         onChange: (callback: CaseFilterCallback) => void,
     }
 }
@@ -56,6 +58,9 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
     const [industry, setIndustry] = useState<string>(ALL)
     const [type, setType] = useState<string>(ALL);
     const [client, setClient] = useState<string>(ALL)
+
+    const [addType, setAddType] = useState<number>(0);
+    const [addTypeName, setAddTypeName] = useState<string>("内容添加");
 
     useEffect(() => {
         setIndustryId(NO_VALUE);
@@ -247,8 +252,8 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                                     currentClients?.map((item) => (
                                         <MenuItem onClick={() => {
                                             setClient(item.name),
-                                            setClientId(item.id),
-                                            param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: item.id })
+                                                setClientId(item.id),
+                                                param.onChange({ caseTabId: param.caseTypeId, industryId: industryId, typeId: typeId, clientId: item.id })
                                         }} value={item.id}>{item.name}</MenuItem>
                                     ))
                                 }
@@ -257,13 +262,39 @@ const CaseFilter: React.FC<CaseFilterProps> = ({
                     )}
                 </Menu>
             </div>
+            <div className=' mr-[110px]'>
+                {param.showAddType && (
+                    <Menu>
+                        {({ isOpen }) => (
+                            <>
+                                <MenuButton>
+                                    <div className='flex flex-row items-center justify-items-center'>
+                                        <p className='text-[15px]'>{addTypeName}</p>
+                                        <ChevronDownIcon />
+                                    </div>
+                                </MenuButton>
+                                <MenuList>
+                                    <MenuItem onClick={() => {
+                                        setAddType(0),
+                                            setAddTypeName("添加新闻")
+                                    }} value={0}>添加新闻</MenuItem>
+                                    <MenuItem onClick={() => {
+                                        setAddType(1),
+                                            setAddTypeName("添加案例")
+                                    }} value={1}>添加案例</MenuItem>
+                                </MenuList>
+                            </>
+                        )}
+                    </Menu>)}
+            </div>
             <div>
-                <InputGroup>
-                    <InputLeftElement pointerEvents='none'>
-                        <SearchIcon color='gray.300' />
-                    </InputLeftElement>
-                    <Input type='string' placeholder='搜索' />
-                </InputGroup>
+                {param.showEditText && (
+                    <InputGroup>
+                        <InputLeftElement pointerEvents='none'>
+                            <SearchIcon color='gray.300' />
+                        </InputLeftElement>
+                        <Input type='string' placeholder='搜索' />
+                    </InputGroup>)}
             </div>
         </div>);
 }

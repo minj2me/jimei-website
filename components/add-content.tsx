@@ -2,15 +2,15 @@
 import { useState, useEffect, useRef } from "react";
 import { Case, CaseTypeData, CaseTab, CaseType, CaseHeaderType, CaseTabSub } from "@/types";
 import { Tabs, TabList, TabPanels, Tab, TabPanel, TabIndicator } from '@chakra-ui/react'
-import CaseList from "./case-list";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import CaseFilter from "@/app/case/[caseId]/components/case-filter";
+import RichTextEditor from "@/components/rich-text-editor";
 
-interface TabCaseListComponentProps {
+interface AddContentComponentProps {
     tabs: CaseTab[],
 }
 
-const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
+const AddContentComponent: React.FC<AddContentComponentProps> = ({
     tabs
 }) => {
     if (tabs === undefined || tabs === null) {
@@ -19,7 +19,6 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     if (tabs === undefined || tabs === null) {
         return;
     }
-    //const [cases, setCases] = useState<Case[]>([]);
     const NO_VALUE = -1;
     const [industryId, setIndustryId] = useState<number>(NO_VALUE);
     const [typeId, setTypeId] = useState<number>(NO_VALUE);
@@ -65,16 +64,11 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                     error = error_;
                 } else {
                     // 将字符串数组转换为对象
-                    const queryObj: Record<string, string> = queryArray.reduce((obj:any, condition) => {
+                    const queryObj: Record<string, string> = queryArray.reduce((obj: any, condition) => {
                         const [key, value] = condition.split('=');
                         obj[key] = value;
                         return obj;
                     }, {});
-                    /*console.log({ queryObj });
-                    console.log("queryObj.caseTabId:" + queryObj.caseTabId);
-                    console.log("queryObj.industryId:" + queryObj.industryId);
-                    console.log("queryObj.typeId:" + queryObj.typeId);
-                    console.log("queryObj.clientId:" + queryObj.clientId);*/
                     let { data: data_, error: error_ } = await supabaseClient
                         .from('Case')
                         .select()
@@ -101,7 +95,7 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
     }*/
     //console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
     return (
-        <div className=" w-[95%] bg-[#f2f2f2]">
+        <div className="bg-[#f2f2f2]">
             <Tabs size='md' align="center" variant="unstyled" onChange={
                 (index) => {
                     //setDataOffset(0),
@@ -137,8 +131,8 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                 <CaseFilter param={
                     {
                         caseTypeId: currentCaseTabId,
-                        showAddType:false,
-                        showEditText:true,
+                        showAddType:true,
+                        showEditText:false,
                         onChange({ caseTabId, industryId, typeId, clientId }) {
                             setCurrentCaseTabId(caseTabId);
                             setIndustryId(industryId);
@@ -146,12 +140,18 @@ const TabCaseListComponent: React.FC<TabCaseListComponentProps> = ({
                             setClientId(clientId);
                         },
                     }} />
-                <div className=" h-[80px]" />
                 <TabPanels>
-                    <CaseList isLoading={isLoading} cases={currentCases} itemsPerPage={9} tabChanged={needReload} />
+                    <div>
+                        <div className='h-[20px]' />
+                        <div className=" bg-[#F2F2F2] h-[600px]">
+                            <RichTextEditor onChange={(content) => {
+                                console.log(content);
+                            }} />
+                        </div>
+                    </div>
                 </TabPanels>
             </Tabs>
         </div>
     );
 }
-export default TabCaseListComponent;
+export default AddContentComponent;

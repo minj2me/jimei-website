@@ -22,3 +22,16 @@ body,
 .text-with-line-breaks {
   white-space: pre-line;
 }
+
+.wrapper-class {
+  padding: 0.5rem;
+  border: 1px solid #ffffff;
+}
+.editor-class {
+  background-color:#ffffff;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+}
+.toolbar-class {
+  border: 1px solid #ccc;
+}
