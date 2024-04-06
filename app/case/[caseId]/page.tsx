@@ -1,10 +1,10 @@
-//import getCase from '@/actions/get-case';
+"use client";
 import Container from '@/components/ui/container';
 import { Case } from '@/types';
 
 interface CasePageProps {
     params: {
-        caseId: string;
+        caseId: number;
     }
 }
 
@@ -20,9 +20,6 @@ const CasePage: React.FC<CasePageProps> = async ({
         return null;
     }*/
 
-    if (params.caseId === "") {
-        return;
-    }
     const map = new Map<string, Case>();
 
     return (

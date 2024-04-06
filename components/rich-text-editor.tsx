@@ -4,12 +4,11 @@ import { EditorState, convertToRaw } from 'draft-js';
 import { Button } from '@chakra-ui/button';
 import dynamic from 'next/dynamic';
 import uniqid from "uniqid";
-//import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { convertToHTML } from 'draft-convert';
 import draftToHtml from 'draftjs-to-html';
 import "../app/globals.css";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const supabaseCaseImagesStoragePath = process.env.NEXT_PUBLIC_SUPABASE_CASE_IMAGE_STORAGE_PATH ?? "";
 
 interface RichTextEditorProps {
     onChange: (content: string) => void;
@@ -29,13 +28,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     const { supabaseClient } = useSessionContext();
     //check for https://github.com/jpuri/react-draft-wysiwyg/issues/951
     const [isMounted, setIsMounted] = useState(false)
-
     const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
-
     const onEditorStateChange = (newEditorState: EditorState): void => {
         setEditorState(newEditorState);
     };
-
     const [convertedContent, setConvertedContent] = useState<string>("");
 
     useEffect(() => {
@@ -51,8 +47,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         setConvertedContent(html);
     }, [editorState]);
 
-    //console.log(convertedContent);
-
     const onSave = async () => {
         //const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
         //setConvertedContent(html);
@@ -64,10 +58,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         //console.log("convertedContent:" + convertedContent);
     };
 
-    const uploadImage = async (imageFile: any): Promise<string> => {
+    const uploadImage = async (imageFile: File): Promise<string> => {
         // Upload image
         const uniqueID = uniqid();
-        //console.log("uploadImage, uniqueID: " + uniqueID);
         const {
             data: imageData,
             error: imageError
@@ -80,9 +73,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             });
 
         if (imageError) {
-            //setIsLoading(false);
-            //return toast.error('Failed image upload');
-            //console.log("Failed image upload: " + imageError);
             return "";
         }
         console.log("Failed image successful, path:" + imageData.path);
@@ -90,20 +80,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
 
     const uploadImageCallBack = (file: File) => {
-        console.log("uploadImageCallBack, file: " + file.name);
-        //https://ojpoihuclyhkkhpwtbcz.supabase.co/storage/v1/object/public/case-images/image-lunx1scs
         return new Promise((resolve, reject) => {
             uploadImage(file)
                 .then(path_ => {
                     if (path_) {
-                        //把图片添加到控件的虚线框
+                        //把图片添加到控件的虚线框(预览)
                         let imgObj = {
                             data: {
-                                link: supabaseUrl + "/storage/v1/object/public/case-images/" + path_,
+                                //link: supabaseUrl + "/storage/v1/object/public/case-images/" + path_,
+                                link: supabaseUrl + supabaseCaseImagesStoragePath + path_,
                             }
                         }
                         resolve(imgObj)
-                        //resolve({ path: path_ });
                     } else {
                         reject(path_);
                     }
@@ -201,7 +189,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
     const MediaComponent: React.FC<MediaComponentPrompts> = ({ block, contentState }) => {
         const data = contentState.getEntity(block.getEntityAt(0)).getData();
-        //console.log("MediaComponent, data: " + {data});
         const emptyHtml = ' ';
         return (
             <div>

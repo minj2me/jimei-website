@@ -6,6 +6,9 @@ import { useSessionContext } from "@supabase/auth-helpers-react";
 import CaseFilter from "@/app/case/[caseId]/components/case-filter";
 import RichTextEditor from "@/components/rich-text-editor";
 import { toast } from "react-hot-toast";
+import uniqid from "uniqid";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const supabaseCaseImagesStoragePath = process.env.NEXT_PUBLIC_SUPABASE_CASE_IMAGE_STORAGE_PATH ?? "";
 
 interface AddContentComponentProps {
     tabs: CaseTab[],
@@ -30,6 +33,7 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
     const [needReload, setNeedReload] = useState<boolean>(false);
     const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(1);
     const [currentCases, setCurrentCases] = useState<Case[]>([]);
+    const [mainImage, setMainImage] = useState("");
 
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
@@ -87,6 +91,48 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
         fetchData();
     }, [currentCaseTabId, industryId, typeId, clientId]);
 
+    const uploadMainImage = async (imageFiles: FileList | null) => {
+        let imageFile: File | undefined = undefined;
+        if (imageFiles && imageFiles.length > 0) {
+            imageFile = imageFiles[0];
+        }
+        if (!imageFile) {
+            return;
+        }
+        toast.loading("主图上传中...");
+        try {
+            const uniqueID = uniqid();
+            const {
+                data: imageData,
+                error: imageError
+            } = await supabaseClient
+                .storage
+                .from('case-images')
+                .upload(`image-${uniqueID}`, imageFile, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
+            if (imageError) {
+                toast.error("数据添加失败");
+                setMainImage("");
+                return;
+            }
+            //https://ojpoihuclyhkkhpwtbcz.supabase.co/storage/v1/object/public/case-images/image-lunynci1
+            const imageUrl = supabaseUrl + supabaseCaseImagesStoragePath + imageData.path;
+            console.log("upload image successful, imageUrl:" + imageUrl);
+            setMainImage(imageUrl);
+            toast.success("主图添加成功");
+        } catch (error) {
+            toast.error("主图添加失败");
+            setMainImage("");
+        } finally {
+            setTimeout(() => {
+                toast.dismiss();
+            }, 2000)
+        }
+    }
+
     const insertData = async (data: Case) => {
         setIsLoading(true);
         toast.loading("数据处理中...");
@@ -97,7 +143,7 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
             console.log("clientId:" + clientId);
             console.log("html:" + data.html);
 
-            const { error: error_ } = await supabaseClient
+            const { data: data_, error: error_ } = await supabaseClient
                 .from('Case')
                 .insert(
                     {
@@ -110,10 +156,19 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
                         //mainImage: { url: "", width: 1500, height: 0, is_main: true },
                         html: data.html
                     },
-                );
+                ).select();
             setIsLoading(false);
             if (!error_) {
                 //setNeedReload(true);
+                if (data_ && data_.length > 0) {
+                    const newCase = data_[0] as Case;
+                    const { data, error } = await supabaseClient
+                        .from('CaseImage')
+                        .insert([
+                            { url: mainImage, caseId: newCase.id, is_main: true, width:1500 },
+                        ])
+                        .select()
+                }
                 toast.success("数据添加成功");
             } else {
                 toast.error("数据添加失败");
@@ -122,6 +177,10 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
             setIsLoading(false);
             toast.error("数据添加失败, " + error);
             console.error('Error inserting data:', error);
+        } finally {
+            setTimeout(() => {
+                toast.dismiss();
+            }, 2000)
         }
     }
 
@@ -182,7 +241,14 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
                             setDesc(event.target.value)
                         }} />
                         <div className='h-[15px]' />
+                        <Input type="file" placeholder="上传主图" accept=".jpg,.png,.jpeg" bgColor={"#ffffff"}
+                            onChange={(event) => {
+                                uploadMainImage(event.currentTarget.files)
+                                //console.log("upload main:"+event.target.value);
+                            }} />
+                        <div className='h-[15px]' />
                         <div className=" bg-[#F2F2F2] h-[600px]">
+                            <p className=" text-black bg-white text-left text-[15px]">填写页面内容</p>
                             <RichTextEditor onChange={(content) => {
                                 //console.log(content);
                                 // export interface Case {
@@ -207,7 +273,7 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
                                     typeId: typeId,
                                     clientId: clientId,
                                     title: title,
-                                    desc:desc,
+                                    desc: desc,
                                     //mainImage: { url: "", width: 1500, height: 0, is_main: true },
                                     html: content,
                                 });
