@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { Case, CaseTypeData, CaseTab, CaseType, CaseHeaderType, CaseTabSub } from "@/types";
-import { Tabs, TabList, TabPanels, Tab, TabPanel, TabIndicator } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel, TabIndicator, Input } from '@chakra-ui/react'
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import CaseFilter from "@/app/case/[caseId]/components/case-filter";
 import RichTextEditor from "@/components/rich-text-editor";
+import { toast } from "react-hot-toast";
 
 interface AddContentComponentProps {
     tabs: CaseTab[],
@@ -26,20 +27,16 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
 
     const { supabaseClient } = useSessionContext();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    //const isInitialRender = useRef(true); // 用于标记是否是首次渲染
-    //const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [needReload, setNeedReload] = useState<boolean>(false);
-    //const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(tabs[0]?.id);
-    //const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(NO_VALUE);
     const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(1);
     const [currentCases, setCurrentCases] = useState<Case[]>([]);
 
-    //console.log("tabs[0]?.id:" + tabs[0]?.id + ", currentCaseTabId:" + currentCaseTabId);
+    const [title, setTitle] = useState('')
+    const [desc, setDesc] = useState('')
 
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
-            //console.log("queryString, fetching cases data, caseTabId:" + currentCaseTabId + ", industryId:" + industryId + ", typeId:" + typeId + ", clientId:" + clientId);
             try {
                 let data: any;
                 let error: any;
@@ -90,12 +87,46 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
         fetchData();
     }, [currentCaseTabId, industryId, typeId, clientId]);
 
-    /*if (!currentTabSub) {
-        return;
-    }*/
-    //console.log("TabCaseListComponent, currentIndex:" + currentIndex + ", currentCases length:" + currentCases.length);
+    const insertData = async (data: Case) => {
+        setIsLoading(true);
+        toast.loading("数据处理中...");
+        try {
+            console.log("currentCaseTabId:" + currentCaseTabId);
+            console.log("industryId:" + industryId);
+            console.log("typeId:" + typeId);
+            console.log("clientId:" + clientId);
+            console.log("html:" + data.html);
+
+            const { error: error_ } = await supabaseClient
+                .from('Case')
+                .insert(
+                    {
+                        caseTabId: currentCaseTabId,
+                        industryId: industryId,
+                        typeId: typeId,
+                        clientId: clientId,
+                        title: data.title,
+                        desc: data?.desc,
+                        //mainImage: { url: "", width: 1500, height: 0, is_main: true },
+                        html: data.html
+                    },
+                );
+            setIsLoading(false);
+            if (!error_) {
+                //setNeedReload(true);
+                toast.success("数据添加成功");
+            } else {
+                toast.error("数据添加失败");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            toast.error("数据添加失败, " + error);
+            console.error('Error inserting data:', error);
+        }
+    }
+
     return (
-        <div className="bg-[#f2f2f2]">
+        <div className="bg-[#f2f2f2] p-5">
             <Tabs size='md' align="center" variant="unstyled" onChange={
                 (index) => {
                     //setDataOffset(0),
@@ -131,8 +162,8 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
                 <CaseFilter param={
                     {
                         caseTypeId: currentCaseTabId,
-                        showAddType:true,
-                        showEditText:false,
+                        showAddType: true,
+                        showEditText: false,
                         onChange({ caseTabId, industryId, typeId, clientId }) {
                             setCurrentCaseTabId(caseTabId);
                             setIndustryId(industryId);
@@ -141,11 +172,45 @@ const AddContentComponent: React.FC<AddContentComponentProps> = ({
                         },
                     }} />
                 <TabPanels>
-                    <div>
+                    <div className=" gap-4">
                         <div className='h-[20px]' />
+                        <Input placeholder='列表页标题' bgColor={"#ffffff"} onChange={(event) => {
+                            setTitle(event.target.value)
+                        }} />
+                        <div className='h-[15px]' />
+                        <Input placeholder='列表页详情' bgColor={"#ffffff"} onChange={(event) => {
+                            setDesc(event.target.value)
+                        }} />
+                        <div className='h-[15px]' />
                         <div className=" bg-[#F2F2F2] h-[600px]">
                             <RichTextEditor onChange={(content) => {
-                                console.log(content);
+                                //console.log(content);
+                                // export interface Case {
+                                //     id?: number,
+                                //     caseTabId: number,
+                                //     industryId: number,
+                                //     typeId: number,
+                                //     clientId: number,
+                                //     type?: CaseTypeData,
+                                //     title?: string,
+                                //     title2?: string,//展示在类型名上方
+                                //     title3?: string,//展示在类型名下方的其它信息 
+                                //     desc?: string,//设计理念 
+                                //     projectBg?: string,//项目背景
+                                //     mainImage: ImageData,
+                                //     images?: ImageData[],
+                                //     html?: string,
+                                //   }
+                                insertData({
+                                    caseTabId: currentCaseTabId,
+                                    industryId: industryId,
+                                    typeId: typeId,
+                                    clientId: clientId,
+                                    title: title,
+                                    desc:desc,
+                                    //mainImage: { url: "", width: 1500, height: 0, is_main: true },
+                                    html: content,
+                                });
                             }} />
                         </div>
                     </div>

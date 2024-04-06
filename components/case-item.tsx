@@ -11,7 +11,7 @@ interface CaseItemProps {
 const CaseItem: React.FC<CaseItemProps> = ({
     caseData
 }) => {
-    const { isLoading, caseImages } = useGetCaseImages(caseData.id);
+    const { isLoading, caseImages } = useGetCaseImages(caseData.id ?? -1);
     const [mainImageUrl, setMainImageUrl] = useState<string>("");
 
     useEffect(() => {

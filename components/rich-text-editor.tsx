@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useSessionContext } from "@supabase/auth-helpers-react";
 import { EditorState, convertToRaw } from 'draft-js';
 import { Button } from '@chakra-ui/button';
 import dynamic from 'next/dynamic';
+import uniqid from "uniqid";
 //import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { convertToHTML } from 'draft-convert';
+import draftToHtml from 'draftjs-to-html';
 import "../app/globals.css";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 
 interface RichTextEditorProps {
     onChange: (content: string) => void;
@@ -22,7 +26,7 @@ const Editor = dynamic(() => import('react-draft-wysiwyg').then(mod => mod.Edito
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
     onChange, initialContent
 }) => {
-
+    const { supabaseClient } = useSessionContext();
     //check for https://github.com/jpuri/react-draft-wysiwyg/issues/951
     const [isMounted, setIsMounted] = useState(false)
 
@@ -42,30 +46,71 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }, [])
 
     useEffect(() => {
-        let html = convertToHTML(editorState.getCurrentContent());
+        //let html = convertToHTML(editorState.getCurrentContent());
+        let html = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         setConvertedContent(html);
     }, [editorState]);
 
     //console.log(convertedContent);
 
-    const onSave = () => {
+    const onSave = async () => {
         //const content = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
         //setConvertedContent(html);
+        //const uploadImageSuccess = await uploadImage("");
         // Save content to database or send to server
         if (onChange) {
             onChange(convertedContent);
         }
+        //console.log("convertedContent:" + convertedContent);
     };
 
+    const uploadImage = async (imageFile: any): Promise<string> => {
+        // Upload image
+        const uniqueID = uniqid();
+        //console.log("uploadImage, uniqueID: " + uniqueID);
+        const {
+            data: imageData,
+            error: imageError
+        } = await supabaseClient
+            .storage
+            .from('case-images')
+            .upload(`image-${uniqueID}`, imageFile, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (imageError) {
+            //setIsLoading(false);
+            //return toast.error('Failed image upload');
+            //console.log("Failed image upload: " + imageError);
+            return "";
+        }
+        console.log("Failed image successful, path:" + imageData.path);
+        return imageData.path;
+    }
+
     const uploadImageCallBack = (file: File) => {
+        console.log("uploadImageCallBack, file: " + file.name);
+        //https://ojpoihuclyhkkhpwtbcz.supabase.co/storage/v1/object/public/case-images/image-lunx1scs
         return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function (e) {
-                const img = new Image();
-                //img.src = this.result;
-                resolve({ data: { link: this.result } });
-            };
+            uploadImage(file)
+                .then(path_ => {
+                    if (path_) {
+                        //把图片添加到控件的虚线框
+                        let imgObj = {
+                            data: {
+                                link: supabaseUrl + "/storage/v1/object/public/case-images/" + path_,
+                            }
+                        }
+                        resolve(imgObj)
+                        //resolve({ path: path_ });
+                    } else {
+                        reject(path_);
+                    }
+                })
+                .catch((err) => {
+                    reject(err);
+                });
         });
     }
 
@@ -78,18 +123,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             reader.onload = function (e) {
                 img.src = this.result;
             };
-
+    
             img.onload = function () {
                 // console.log(img); // 获取图片
                 // console.log(img.src.length)
                 // 缩放图片需要的canvas（也可以在DOM中直接定义canvas标签，这样就能把压缩完的图片不转base64也能直接显示出来）
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
-
+    
                 // 图片原始尺寸
                 const originWidth = this.width;
                 const originHeight = this.height;
-
+    
                 // 最大尺寸限制，可通过设置宽高来实现图片压缩程度
                 const maxWidth = 400;
                 const maxHeight = 500;
@@ -115,7 +160,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 // 图片压缩
                 context.drawImage(img, 0, 0, targetWidth, targetHeight);
                 //第一个参数是创建的img对象；第二三个参数是左上角坐标，后面两个是画布区域宽高 
-
+    
                 // 压缩后的图片转base64 url
                 //canvas.toDataURL(mimeType, qualityArgument),mimeType 默认值是'image/png';
                 //qualityArgument表示导出的图片质量，只有导出为jpeg和webp格式的时候此参数才有效，默认值是0.92 
@@ -125,7 +170,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                         link: newUrl,
                     },
                 });
-
+    
                 // 也可以把压缩后的图片转blob格式用于上传
                 // canvas.toBlob((blob)=>{
                 //     console.log(blob)
@@ -156,6 +201,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
     const MediaComponent: React.FC<MediaComponentPrompts> = ({ block, contentState }) => {
         const data = contentState.getEntity(block.getEntityAt(0)).getData();
+        //console.log("MediaComponent, data: " + {data});
         const emptyHtml = ' ';
         return (
             <div>

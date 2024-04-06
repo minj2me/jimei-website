@@ -14,21 +14,11 @@ import AddContentComponent from "@/components/add-content";
 https://blog.logrocket.com/build-rich-text-editors-react-draft-js-react-draft-wysiwyg/
  */
 
-
 const AddPage = () => {
-    /*const [addType, setAddType] = useState<number>(0);
-    const [addTypeName, setAddTypeName] = useState<string>("内容添加");
-    const NO_VALUE = -1;
-    const [currentCaseTabId, setCurrentCaseTabId] = useState<number>(params.caseTabId);
-    const [industryId, setIndustryId] = useState<number>(NO_VALUE);
-    const [typeId, setTypeId] = useState<number>(NO_VALUE);
-    const [clientId, setClientId] = useState<number>(NO_VALUE);*/
-
     const { isLoading, caseTabs } = useGetCaseTab();
     if (isLoading) {
         return (<p className="flex w-[100%] h-[800px] text-center items-center justify-center">加载中...</p>);
     }
-
     return (
         <div>
             <AddContentComponent tabs={caseTabs} />

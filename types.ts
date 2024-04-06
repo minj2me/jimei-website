@@ -121,19 +121,20 @@ export interface Worker {
 }
 
 export interface Case {
-  id: number,
+  id?: number,
   caseTabId: number,
   industryId: number,
   typeId: number,
   clientId: number,
-  type: CaseTypeData,
-  title: string,
-  title2: string,//展示在类型名上方
-  title3: string,//展示在类型名下方的其它信息 
-  desc: string,//设计理念 
-  projectBg: string,//项目背景
-  mainImage: ImageData,
+  type?: CaseTypeData,
+  title?: string,
+  title2?: string,//展示在类型名上方
+  title3?: string,//展示在类型名下方的其它信息 
+  desc?: string,//设计理念 
+  projectBg?: string,//项目背景
+  mainImage?: ImageData,
   images?: ImageData[],
+  html?: string,
 }
 
 export interface Banner {

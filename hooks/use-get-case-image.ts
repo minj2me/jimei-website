@@ -16,7 +16,6 @@ const useGetCaseImages = (caseId: number) => {
                     .select("*")
                     .eq('caseId', caseId)
                 if (!error) {
-                    //return data as CaseTab[];
                     setCaseImages(data as ImageData[]);
                     setIsLoading(false);
                 }
